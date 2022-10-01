@@ -6,10 +6,26 @@
 	import { onMount } from "svelte";
 
 	let editorWrapper;
+	let editor: EditorView;
+	let doc;
+
+	async function getFile() {
+		const [fileHandle] = await window.showOpenFilePicker();
+
+		const file = await fileHandle.getFile();
+		console.log(await file.text());
+		doc = await file.text();
+
+		editor.dispatch({
+			changes: { from: 0, to: editor.state.doc.length, insert: doc }
+		});
+	}
+
 
 	onMount(() => {
-		let editor = new EditorView({
+		editor = new EditorView({
 			parent: editorWrapper,
+			doc,
 			extensions: [
 				basicSetup,
 				javascript(),
@@ -19,6 +35,7 @@
 	})
 </script>
 
+<button on:click={getFile}>Click</button>
 <div bind:this={editorWrapper} class="editor-wrapper"></div>
 
 
