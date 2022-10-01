@@ -1,9 +1,16 @@
-export const openFile = async () => {
-	const [fileHandle] = await window.showOpenFilePicker();
+import { fileHandle } from "./stores";
 
-	const file = await fileHandle.getFile();
-	console.log(await file.text());
-	const doc = await file.text();
+export async function getFileHandle() {
+	const [fileSystemHandle] = await window.showOpenFilePicker();
 
-	return doc;
+	return fileSystemHandle
+}
+
+export async function writeFile(fileHandle: FileSystemFileHandle, contents: string) {
+	const writable = await fileHandle.createWritable();
+	await writable.write({
+		data: contents,
+		type: "write"
+	});
+	await writable.close();
 }
