@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { basicSetup } from "codemirror";
+	import { editor as monacoEditor } from "monaco-editor";
+	import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+    import typescriptWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
 	import { EditorView, keymap } from "@codemirror/view";
 	import { EditorState } from "@codemirror/state";
 	import { indentWithTab } from "@codemirror/commands"
@@ -11,24 +14,22 @@
 	let editorWrapper;
 
 	function onSave() {
-		writeFile($fileHandle, $editor.state.doc as unknown as string)
+		writeFile($fileHandle, $editor.getValue())
 	}
 
 	onMount(() => {
-		editor.set(new EditorView({
-			parent: editorWrapper,
-			extensions: [
-				basicSetup,
-				javascript(),
-				keymap.of([
-					indentWithTab,
-					{
-						key: "Ctrl-s",
-					    run() { onSave(); return true }
-					}
-				]),
-				EditorState.tabSize.of(4),
-			]
+		// @ts-ignore
+        self.MonacoEnvironment = {
+            getWorker: function (_moduleId: any, label: string) {
+                if (label === "typescript") {
+                    return new typescriptWorker();
+                }
+                return new editorWorker();
+            }
+        };
+
+		editor.set(monacoEditor.create(editorWrapper, {
+			language: "typescript"
 		}))
 	})
 </script>

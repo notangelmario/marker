@@ -9,17 +9,15 @@
 
 		fileHandleStore.set(fileHandle);
 
-		$editor.dispatch({
-			changes: { from: 0, to: $editor.state.doc.length, insert: await file.text() }
-		})
+		$editor.setValue(await file.text())
 	}
 
 	function saveFileClick() {
-		writeFile($fileHandleStore, $editor.state.doc as unknown as string)
+		writeFile($fileHandleStore, $editor.getValue())
 	}
 
 	function closeFileClick() {
-		$editor.dispatch({ changes: { from:0, empty: true, to: $editor.state.doc.length } });
+		$editor.setValue("");
 
 		fileHandleStore.set(undefined);
 	}
