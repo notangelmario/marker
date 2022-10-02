@@ -19,7 +19,15 @@
 	}
 </script>
 
-<div>
+<div class="menuBarWrapper">
 	<button on:click={openFileClick}>Open File</button>
 	<button on:click={saveFileClick} disabled={!$fileHandleStore}>Save File</button>
 </div>
+
+<style scoped>
+	.menuBarWrapper {
+		display: flex;
+		flex-flow: row;
+		flex-wrap: nowrap;
+	}
+</style>
