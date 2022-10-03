@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { editor as monacoEditor } from "monaco-editor";
-	import { fileType, getFileHandle, writeFile } from "../file";
+	import { editor as monacoEditor, Uri } from "monaco-editor";
+	import { getFileHandle, writeFile } from "../file";
 	import { editor, fileHandle as fileHandleStore } from "../stores";
 
 
@@ -10,7 +10,7 @@
 
 		fileHandleStore.set(fileHandle);
 
-		const newModel = monacoEditor.createModel(await file.text(), fileType.get(file.name.match(/\.[0-9a-z]+$/i)[0].slice(1)) ?? undefined)
+		const newModel = monacoEditor.createModel(await file.text(), undefined, Uri.file(file.name))
 
 		$editor.setModel(newModel);
 	}
