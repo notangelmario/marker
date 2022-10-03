@@ -1,11 +1,26 @@
 import "./app.css";
 import { initStore } from "./lib/store";
 import { initEditor } from "./lib/editor";
+import { closeModal, openModal } from "./lib/modal";
+import { KeyCode, KeyMod } from "monaco-editor";
 
-const editorWrapper = document.getElementById("app");
+const editorWrapper = document.getElementById("app")!;
 
-const { store, persistentStore } = initStore();
+const { store } = initStore();
+const { editorInstance } = initEditor(editorWrapper, store);
 
-const getFileHandle = () => store.get("fileHandle");
+editorInstance.focus();
 
-const { editorFileAvailableContext } = initEditor(editorWrapper, getFileHandle);
+if (!store.get("visited")) {
+	openModal(editorInstance, { autoHide: false, text: "Press Ctrl+P to get started" })
+
+	const triggered = editorInstance.createContextKey<boolean>("intro-triggered", false);
+	
+	editorInstance.addCommand(KeyMod.CtrlCmd | KeyCode.KeyP, () => {
+		triggered.set(true);
+
+		editorInstance.trigger("ctrl+p", "editor.action.quickCommand", null);
+
+		closeModal(editorInstance);
+	}, "!intro-triggered")
+}

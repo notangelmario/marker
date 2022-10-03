@@ -16,7 +16,7 @@ class PersistentStore {
 		return this.s.get(key) ?? null;
 	}
 
-	set(key: string, value): void {
+	set(key: string, value: string): void {
 		this.s.set(key, value);
 	}
 }

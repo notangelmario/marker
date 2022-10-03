@@ -12,3 +12,17 @@ html, body, #app {
 	margin: 0;
 	padding: 0;
 }
+
+#pencil-modal {
+	top: 110vh;
+	left: 50%;
+	transform: translate(-50%, -50vh);
+	width: 512px;
+	text-align: center;
+	background-color: var(--vscode-editorWidget-background);
+	color: var(--vscode-editor-foreground);
+	box-shadow: 0 0 10px 1px var(--vscode-widget-shadow);
+	border-radius: calc(var(--radius) * 2);
+	padding: 1rem;
+	z-index: 99;
+}

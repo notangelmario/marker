@@ -19,13 +19,14 @@ export function onSave(fileHandle: FileSystemFileHandle, editorInstance: editor.
 	writeFile(fileHandle, editorInstance.getValue())
 }
 
-export async function onOpen(editorInstance: editor.IStandaloneCodeEditor, ) {
+export async function onOpen(store: Map<string, any>, editorInstance: editor.IStandaloneCodeEditor) {
 	const fh = await getFileHandle();
 	const file = await fh.getFile();
 
-	const newModel = editor.createModel(await file.text(), undefined, Uri.file(file.name))
+	editor.getModels().forEach((model) => model.dispose());
+	editorInstance.setModel(editor.createModel(await file.text(), undefined, Uri.file(file.name)));
 
-	editorInstance.setModel(newModel);
+	store.set("fileHandle", fh);
 }
 
 export function onClose(editorInstance: editor.IStandaloneCodeEditor) {
