@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { editor as monacoEditor, KeyMod, KeyCode, Uri } from "monaco-editor";
+	import { editor as monacoEditor, KeyMod, KeyCode } from "monaco-editor";
 	import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 	import { editor, fileHandle } from "../stores";
 	import { onMount } from "svelte";
-	import { onOpen, onSave } from "../file";
+	import { onClose, onOpen, onSave } from "../file";
 
 	let editorWrapper;
 
@@ -18,33 +18,34 @@
 			smoothScrolling: true,
 		})
 
-		var saveable = editorInstance.createContextKey('saveable', !!$fileHandle);
-		var closable = editorInstance.createContextKey('closable', !!$fileHandle);
+		var fileAvailable = editorInstance.createContextKey('fileAvailable', !!$fileHandle);
 
 
 		fileHandle.subscribe((e) => {
-			saveable.set(!!e);
+			fileAvailable.set(!!e);
 		})
 
 		editorInstance.addAction({
 			id: "pencil.save",
 			label: "Save File",
+			precondition: "fileAvailable",
 			run: onSave,
-			precondition: "saveable",
 			keybindings: [KeyMod.CtrlCmd | KeyCode.KeyS]
 		})
 		editorInstance.addAction({
 			id: "pencil.open",
 			label: "Open File...",
+			precondition: "fileAvailable",
 			run: onOpen,
 			keybindings: [KeyMod.CtrlCmd | KeyCode.KeyO]
 		})
 
-		document.addEventListener('keydown', (e) => {
-			e.preventDefault();
+		document.addEventListener("keydown", (e) => {
 			e.stopPropagation();
 			
+			if (e.ctrlKey && e.key === "s") onSave();
 			if (e.ctrlKey && e.key === "o") onOpen();
+			if (e.ctrlKey && e.key === "q") onClose();
 		}, false);
 
 		editor.set(editorInstance);
