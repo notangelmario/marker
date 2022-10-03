@@ -1,37 +1,43 @@
 <script lang="ts">
-	import { editor as monacoEditor, KeyMod, KeyCode } from "monaco-editor";
+	import { editor as monacoEditor, KeyMod, KeyCode, Uri } from "monaco-editor";
 	import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
-    import typescriptWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
-    import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 	import { editor, fileHandle } from "../stores";
-	import { writeFile } from "../file";
 	import { onMount } from "svelte";
+	import { onOpen, onSave } from "../file";
 
 	let editorWrapper;
 
-	function onSave() {
-		writeFile($fileHandle, $editor.getValue())
-	}
-
 	onMount(() => {
-		// @ts-ignore
         self.MonacoEnvironment = {
             getWorker: function (_moduleId: any, label: string) {
-                if (label === "typescript") {
-                    return new typescriptWorker();
-                }
-				if (label === "json") {
-					return new jsonWorker();
-				}
                 return new editorWorker();
             }
         };
 
 		const editorInstance = monacoEditor.create(editorWrapper, {
-			language: "typescript",
+			smoothScrolling: true,
 		})
 
-		editorInstance.addCommand(KeyMod.CtrlCmd | KeyCode.KeyS, onSave);
+		var saveable = editorInstance.createContextKey('saveable', !!$fileHandle);
+		var closable = editorInstance.createContextKey('closable', !!$fileHandle);
+
+		fileHandle.subscribe((e) => {
+			saveable.set(!!e);
+		})
+
+		editorInstance.addAction({
+			id: "pencil.save",
+			label: "Save File",
+			run: onSave,
+			precondition: "saveable",
+			keybindings: [KeyMod.CtrlCmd | KeyCode.KeyS]
+		})
+		editorInstance.addAction({
+			id: "pencil.open",
+			label: "Open File...",
+			run: onOpen,
+			keybindings: [KeyMod.CtrlCmd | KeyCode.KeyO]
+		})
 
 		editor.set(editorInstance);
 	})

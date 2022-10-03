@@ -1,0 +1,96 @@
+<script lang="ts">
+	interface Button {
+		label: string;
+		onClick?: () => void;
+		disabled?: boolean;
+	}
+
+	export let label: string;
+	export let buttons: Array<Button | null>;
+	let button: HTMLButtonElement;
+	let subMenu: HTMLDivElement;
+
+	function openSubMenu() {
+		subMenu.style.display = "block";
+		button.classList.add("focused");
+
+		function onClick(e: any) {
+			if (e.target !== subMenu) {
+				subMenu.style.display = "none";
+				button.classList.remove("focused");
+
+				window.removeEventListener("click", onClick);
+			}
+		}
+
+		window.addEventListener("click", onClick)
+	}
+</script>
+
+<div class="button-wrapper">
+	<button
+		on:click|stopPropagation={openSubMenu}
+		bind:this={button}
+		class:focused={false}
+	>
+		{label}
+	</button>
+
+	<div
+		class="sub-menu"
+		bind:this={subMenu}
+	>
+		{#each buttons as button}
+			{#if button === null}
+				<hr />
+			{:else}
+				<button
+					on:click={button.onClick}
+					disabled={button.disabled}
+				>
+					{button.label}
+				</button>
+			{/if}
+		{/each}
+	</div>
+</div>
+
+<style scoped>
+	.button-wrapper > button {
+		padding: .25rem .5rem;
+		cursor: default;
+		background-color: #fff;
+		border-radius: var(--radius);
+		outline: none;
+		border: none;
+	}
+
+	.sub-menu {
+		background-color: #fff;
+		position: absolute;
+		overflow: hidden;
+		display: none;
+		box-shadow: var(--shadow);
+		border-radius: var(--radius);
+		z-index: 1;
+	}
+
+	button:hover, button.focused {
+		filter: brightness(.9);
+	}
+
+	.sub-menu button {
+		display: block;
+		background-color: #fff;
+		outline: none;
+		border: none;
+		padding: .25rem .5rem;
+		width: 10rem;
+		text-align: left;
+	}
+
+	hr {
+		margin: .25rem 0;
+		pointer-events: none;
+	}
+</style>
