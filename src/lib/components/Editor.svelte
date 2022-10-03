@@ -1,16 +1,12 @@
 <script lang="ts">
-	import { basicSetup } from "codemirror";
-	import { editor as monacoEditor } from "monaco-editor";
+	import { editor as monacoEditor, KeyMod, KeyCode } from "monaco-editor";
 	import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
     import typescriptWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
-	import { EditorView, keymap } from "@codemirror/view";
-	import { EditorState } from "@codemirror/state";
-	import { indentWithTab } from "@codemirror/commands"
-	import { javascript } from "@codemirror/lang-javascript";
+    import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 	import { editor, fileHandle } from "../stores";
 	import { writeFile } from "../file";
 	import { onMount } from "svelte";
-	
+
 	let editorWrapper;
 
 	function onSave() {
@@ -24,13 +20,20 @@
                 if (label === "typescript") {
                     return new typescriptWorker();
                 }
+				if (label === "json") {
+					return new jsonWorker();
+				}
                 return new editorWorker();
             }
         };
 
-		editor.set(monacoEditor.create(editorWrapper, {
-			language: "typescript"
-		}))
+		const editorInstance = monacoEditor.create(editorWrapper, {
+			language: "typescript",
+		})
+
+		editorInstance.addCommand(KeyMod.CtrlCmd | KeyCode.KeyS, onSave);
+
+		editor.set(editorInstance);
 	})
 </script>
 

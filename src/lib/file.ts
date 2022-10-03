@@ -14,3 +14,8 @@ export async function writeFile(fileHandle: FileSystemFileHandle, contents: stri
 	});
 	await writable.close();
 }
+
+export const fileType = new Map<string, string>([
+	["ts", "typescript"],
+	["json", "json"]
+])

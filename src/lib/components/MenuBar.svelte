@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { getFileHandle, writeFile } from "../file";
+	import { editor as monacoEditor } from "monaco-editor";
+	import { fileType, getFileHandle, writeFile } from "../file";
 	import { editor, fileHandle as fileHandleStore } from "../stores";
 
 
@@ -9,7 +10,9 @@
 
 		fileHandleStore.set(fileHandle);
 
-		$editor.setValue(await file.text())
+		const newModel = monacoEditor.createModel(await file.text(), fileType.get(file.name.match(/\.[0-9a-z]+$/i)[0].slice(1)) ?? undefined)
+
+		$editor.setModel(newModel);
 	}
 
 	function saveFileClick() {
