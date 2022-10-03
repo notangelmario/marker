@@ -9,15 +9,16 @@
 	export let buttons: Array<Button | null>;
 	let button: HTMLButtonElement;
 	let subMenu: HTMLDivElement;
+	let subMenuOpened = false;
 
 	function openSubMenu() {
 		subMenu.style.display = "block";
-		button.classList.add("focused");
+		subMenuOpened = true
 
 		function onClick(e: any) {
 			if (e.target !== subMenu) {
 				subMenu.style.display = "none";
-				button.classList.remove("focused");
+				subMenuOpened = false
 
 				window.removeEventListener("click", onClick);
 			}
@@ -31,7 +32,7 @@
 	<button
 		on:click|stopPropagation={openSubMenu}
 		bind:this={button}
-		class:focused={false}
+		class:focused={subMenuOpened}
 	>
 		{label}
 	</button>
@@ -84,8 +85,8 @@
 		background-color: #fff;
 		outline: none;
 		border: none;
-		padding: .25rem .5rem;
-		width: 10rem;
+		padding: .25rem 1rem;
+		width: 15rem;
 		text-align: left;
 	}
 

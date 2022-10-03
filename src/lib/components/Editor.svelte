@@ -21,6 +21,7 @@
 		var saveable = editorInstance.createContextKey('saveable', !!$fileHandle);
 		var closable = editorInstance.createContextKey('closable', !!$fileHandle);
 
+
 		fileHandle.subscribe((e) => {
 			saveable.set(!!e);
 		})
@@ -38,6 +39,13 @@
 			run: onOpen,
 			keybindings: [KeyMod.CtrlCmd | KeyCode.KeyO]
 		})
+
+		document.addEventListener('keydown', (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+			
+			if (e.ctrlKey && e.key === "o") onOpen();
+		}, false);
 
 		editor.set(editorInstance);
 	})
