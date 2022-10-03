@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { editor as monacoEditor, Uri } from "monaco-editor";
-	import { getFileHandle, onOpen, onSave, onClose } from "../file";
-	import { editor, fileHandle as fileHandleStore } from "../stores";
+	import { onOpen, onSave, onClose } from "../file";
+	import { fileHandle } from "../stores";
 	import MenuBarButton from "./MenuBarButton.svelte";
 	import logo from "../../assets/logo.png";
+	import { version } from "../../../package.json";
 </script> 
 
 <div class="menuBarWrapper">
@@ -21,14 +21,29 @@
 			{
 				label: "Save File",
 				onClick: onSave,
-				disabled: !$fileHandleStore
+				disabled: !$fileHandle
 			},
 			null,
 			{
 				label: "Close File",
 				onClick: onClose,
-				disabled: !$fileHandleStore
+				disabled: !$fileHandle
 			},
+		]}
+	/>
+	<MenuBarButton
+		label="About"
+		buttons={[
+			{
+				label: `GitHub repo`,
+				onClick: () => window.open("https://github.com/fructoland/pencil", "_blank")
+			},
+			{
+				label: `Version ${version}`,
+			},
+			{
+				label: "Made with ❤ by Fructo",
+			}
 		]}
 	/>
 </div>

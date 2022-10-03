@@ -58,7 +58,8 @@
 
 <style scoped>
 	.button-wrapper > button {
-		padding: .25rem .5rem;
+		padding: 0 .5rem;
+		height: 24px;
 		cursor: default;
 		background-color: #fff;
 		border-radius: var(--radius);
