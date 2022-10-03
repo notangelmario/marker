@@ -1,8 +1,11 @@
 import "./app.css";
-import App from './App.svelte';
+import { initStore } from "./lib/store";
+import { initEditor } from "./lib/editor";
 
-const app = new App({
-  target: document.getElementById('app')
-})
+const editorWrapper = document.getElementById("app");
 
-export default app
+const { store, persistentStore } = initStore();
+
+const getFileHandle = () => store.get("fileHandle");
+
+const { editorFileAvailableContext } = initEditor(editorWrapper, getFileHandle);

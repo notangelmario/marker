@@ -12,17 +12,3 @@ html, body, #app {
 	margin: 0;
 	padding: 0;
 }
-
-.cm-editor { 
-	height: 100%; 
-	border-top: 1px solid silver;
-	outline: none;
-}
-
-.cm-editor.cm-focused { 
-	outline: none!important;
-}
-
-.cm-scroller {
-	overflow: auto; 
-}

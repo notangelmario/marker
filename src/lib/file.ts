@@ -1,6 +1,4 @@
-import { get } from 'svelte/store';
-import { editor as monacoEditor, Uri } from "monaco-editor";
-import { fileHandle, editor } from "./stores";
+import { editor, Uri } from "monaco-editor";
 
 export async function getFileHandle() {
 	const [fileSystemHandle] = await window.showOpenFilePicker();
@@ -17,22 +15,19 @@ export async function writeFile(fileHandle: FileSystemFileHandle, contents: stri
 	await writable.close();
 }
 
-export function onSave() {
-	writeFile(get(fileHandle), get(editor).getValue())
+export function onSave(fileHandle: FileSystemFileHandle, editorInstance: editor.IStandaloneCodeEditor) {
+	writeFile(fileHandle, editorInstance.getValue())
 }
 
-export async function onOpen() {
+export async function onOpen(editorInstance: editor.IStandaloneCodeEditor, ) {
 	const fh = await getFileHandle();
 	const file = await fh.getFile();
 
-	fileHandle.set(fh);
-	const newModel = monacoEditor.createModel(await file.text(), undefined, Uri.file(file.name))
+	const newModel = editor.createModel(await file.text(), undefined, Uri.file(file.name))
 
-	get(editor).setModel(newModel);
+	editorInstance.setModel(newModel);
 }
 
-export function onClose() {
-	get(editor).setValue("");
-
-	fileHandle.set(undefined);
+export function onClose(editorInstance: editor.IStandaloneCodeEditor) {
+	editorInstance.setValue("");
 }
