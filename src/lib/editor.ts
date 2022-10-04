@@ -1,30 +1,29 @@
 import { editor, KeyMod, KeyCode } from "monaco-editor";
-import { onClose, onOpen, onSave } from "./file.ts";
-import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
-import { Store } from "./store.ts";
+import { onClose, onOpen, onSave } from "./file";
+import { Store } from "./store";
+import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
+
 
 // Monaco editor doesn't have an API to change default keybindings
 // so we have to tap into internal api to change default keybindings
 export const updateKeyBinding = (editor: editor.IStandaloneCodeEditor, id: string, newKeyBinding: number) => {
 	const action = editor.getAction(id);
 
-	// deno-lint-ignore ban-ts-comment
 	//@ts-ignore 
 	editor._standaloneKeybindingService.addDynamicKeybinding(`-${id}`, undefined, () => {})
-	// deno-lint-ignore ban-ts-comment
 	//@ts-ignore 
 	editor._standaloneKeybindingService.addDynamicKeybinding(id, newKeyBinding, () => action.run())
 }
 
 export function initEditor(editorWrapper: HTMLElement, store: Store) {
+	const theme = store.get("theme");
+
 	self.MonacoEnvironment = {
 		getWorker () {
-			// deno-lint-ignore ban-ts-comment
-			//@ts-ignore
-			return new EditorWorker();
+			return new editorWorker();
 		}
 	}
-	  
+
 
 	const editorInstance = editor.create(editorWrapper, {
 		smoothScrolling: true,
@@ -32,10 +31,9 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 		padding: {
 			top: 32,
 		},
-		language: "vs"
+		theme: theme === "dark" ? "vs-dark" : "vs"
 	})
 
-	
 	addActions(editorInstance, store);
 
 	// Rebind command palette to CTRL+P

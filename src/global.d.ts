@@ -1,1 +1,0 @@
-/// <reference types="https://esm.sh/v96/@types/wicg-file-system-access@2020.9.5/index.d.ts"/>

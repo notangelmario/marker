@@ -1,10 +1,11 @@
+// deno-lint-ignore-file no-explicit-any
 export class Store {
 	private s: Map<string, any>
 	private toPersist: Array<string>
 
 	constructor() {
 		this.s = new Map();
-		this.toPersist = ["visited"];
+		this.toPersist = ["visited", "theme"];
 
 		this.toPersist.forEach((persistKey) => {
 			const storedValue = localStorage.getItem(persistKey);

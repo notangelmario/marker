@@ -1,10 +1,8 @@
-/// <reference types="./global.d.ts"/>
-
-import { initStore } from "./lib/store.ts";
-import { initEditor } from "./lib/editor.ts";
-import { closeModal, openModal } from "./lib/modal.ts";
+import "./app.css";
+import { initStore } from "./lib/store";
+import { initEditor } from "./lib/editor";
+import { closeModal, openModal } from "./lib/modal";
 import { KeyCode, KeyMod } from "monaco-editor";
-import "monaco-editor/min/vs/editor/editor.main.css?css";
 
 const editorWrapper = document.getElementById("app")!;
 
