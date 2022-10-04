@@ -1,6 +1,7 @@
 import { editor, KeyMod, KeyCode } from "monaco-editor";
 import { onClose, onOpen, onSave } from "./file";
 import { Store } from "./store";
+//@ts-ignore
 import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
 
 
@@ -16,7 +17,8 @@ export const updateKeyBinding = (editor: editor.IStandaloneCodeEditor, id: strin
 }
 
 export function initEditor(editorWrapper: HTMLElement, store: Store) {
-	const theme = store.get("theme");
+	// const theme = store.get("theme");
+	const theme = window.matchMedia("(prefers-colors-scheme: dark)") ? "dark" : "light"
 
 	self.MonacoEnvironment = {
 		getWorker () {
@@ -76,25 +78,25 @@ function addActions(editorInstance: editor.IStandaloneCodeEditor, store: Store) 
 		},
 		keybindings: [KeyMod.CtrlCmd | KeyCode.KeyQ]
 	})
-	editorInstance.addAction({
-		id: "editor.change_theme",
-		label: "Toggle Dark/Light Theme",
-		run: () => {
-			const theme = store.get("theme");
+	// editorInstance.addAction({
+	// 	id: "editor.change_theme",
+	// 	label: "Toggle Dark/Light Theme",
+	// 	run: () => {
+	// 		const theme = store.get("theme");
 
-			if (!theme || theme === "light") {
-				editorInstance.updateOptions({
-					theme: "vs-dark"
-				})
+	// 		if (!theme || theme === "light") {
+	// 			editorInstance.updateOptions({
+	// 				theme: "vs-dark"
+	// 			})
 
-				store.set("theme", "dark")
-			} else if (theme === "dark"){
-				editorInstance.updateOptions({
-					theme: "vs"
-				})
+	// 			store.set("theme", "dark")
+	// 		} else if (theme === "dark"){
+	// 			editorInstance.updateOptions({
+	// 				theme: "vs"
+	// 			})
 
-				store.set("theme", "light")
-			}
-		}
-	})
+	// 			store.set("theme", "light")
+	// 		}
+	// 	}
+	// })
 }

@@ -1,4 +1,3 @@
-import "./app.css";
 import { initStore } from "./lib/store";
 import { initEditor } from "./lib/editor";
 import { closeModal, openModal } from "./lib/modal";
