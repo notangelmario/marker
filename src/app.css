@@ -1,3 +1,8 @@
+@font-face {
+	font-family: Fira Code;
+	src: url("/FiraCode-Regular.ttf");
+}
+
 :root {
 	--radius: 4px;
 	--shadow: 0px 0px 5px 1px #21212150;

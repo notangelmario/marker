@@ -24,6 +24,11 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 	const editor = monaco.editor.create(editorWrapper, {
 		smoothScrolling: true,
 		automaticLayout: true,
+		minimap: {
+			autohide: true,
+		},
+		fontFamily: "Fira Code",
+		fontLigatures: true,
 		padding: {
 			top: 32,
 		},
