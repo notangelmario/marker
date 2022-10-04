@@ -1,4 +1,5 @@
 import { editor, Uri } from "monaco-editor";
+import { Store } from "./store.ts";
 
 export async function getFileHandle() {
 	const [fileSystemHandle] = await window.showOpenFilePicker();
@@ -19,12 +20,12 @@ export function onSave(fileHandle: FileSystemFileHandle, editorInstance: editor.
 	writeFile(fileHandle, editorInstance.getValue())
 }
 
-export async function onOpen(store: Map<string, any>, editorInstance: editor.IStandaloneCodeEditor) {
+export async function onOpen(store: Store, editorInstance: editor.IStandaloneCodeEditor) {
 	const fh = await getFileHandle();
 	const file = await fh.getFile();
 
 	editor.getModels().forEach((model) => model.dispose());
-	editorInstance.setModel(editor.createModel(await file.text(), undefined, Uri.file(file.name)));
+	editorInstance.setModel(editor.createModel(await file.text(), "typescript", Uri.file(file.name)));
 
 	store.set("fileHandle", fh);
 }

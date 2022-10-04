@@ -1,27 +1,27 @@
 import { editor, KeyMod, KeyCode } from "monaco-editor";
-import { onClose, onOpen, onSave } from "./file";
+import { onClose, onOpen, onSave } from "./file.ts";
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
-import { CommandsRegistry } from 'monaco-editor/esm/vs/platform/commands/common/commands'
+import { Store } from "./store.ts";
 
 // Monaco editor doesn't have an API to change default keybindings
 // so we have to tap into internal api to change default keybindings
-export const updateKeyBinding = (editor: editor.ICodeEditor, id: string, newKeyBinding?: number) => {
+export const updateKeyBinding = (editor: editor.IStandaloneCodeEditor, id: string, newKeyBinding: number) => {
+	const action = editor.getAction(id);
+
+	// deno-lint-ignore ban-ts-comment
 	//@ts-ignore 
 	editor._standaloneKeybindingService.addDynamicKeybinding(`-${id}`, undefined, () => {})
-
-	if (newKeyBinding) {
-		const { handler, when } = CommandsRegistry.getCommand(id) ?? {}
-		if (handler) {
-			//@ts-ignore 
-			editor._standaloneKeybindingService.addDynamicKeybinding(id, newKeyBinding, handler, when)
-		}
-	}
+	// deno-lint-ignore ban-ts-comment
+	//@ts-ignore 
+	editor._standaloneKeybindingService.addDynamicKeybinding(id, newKeyBinding, () => action.run())
 }
 
-export function initEditor(editorWrapper: HTMLElement, store: Map<string, any>) {
-	window.MonacoEnvironment = {
+export function initEditor(editorWrapper: HTMLElement, store: Store) {
+	self.MonacoEnvironment = {
 		getWorker () {
-			return new EditorWorker()
+			// deno-lint-ignore ban-ts-comment
+			//@ts-ignore
+			return new EditorWorker();
 		}
 	}
 	  
@@ -35,7 +35,18 @@ export function initEditor(editorWrapper: HTMLElement, store: Map<string, any>) 
 		language: "vs"
 	})
 
-	var editorFileAvailableContext = editorInstance.createContextKey<boolean>('fileAvailable', false);
+	
+	addActions(editorInstance, store);
+
+	// Rebind command palette to CTRL+P
+	// To make things easier for Chromebook users
+	updateKeyBinding(editorInstance, "editor.action.quickCommand", KeyMod.CtrlCmd | KeyCode.KeyP);
+	
+	return { editorInstance }
+}
+
+function addActions(editorInstance: editor.IStandaloneCodeEditor, store: Store) {
+	const editorFileAvailableContext = editorInstance.createContextKey<boolean>('fileAvailable', false);
 
 	editorInstance.addAction({
 		id: "pencil.open_file",
@@ -88,10 +99,4 @@ export function initEditor(editorWrapper: HTMLElement, store: Map<string, any>) 
 			}
 		}
 	})
-	
-	// Rebind command palette to CTRL+P
-	// To make things easier for Chromebook users
-	updateKeyBinding(editorInstance, "editor.action.quickCommand", KeyMod.CtrlCmd | KeyCode.KeyP);
-	
-	return { editorFileAvailableContext, editorInstance }
 }
