@@ -25,7 +25,7 @@ export async function onOpen(store: Store, editorInstance: editor.IStandaloneCod
 	const file = await fh.getFile();
 
 	editor.getModels().forEach((model) => model.dispose());
-	editorInstance.setModel(editor.createModel(await file.text(), "typescript", Uri.file(file.name)));
+	editorInstance.setModel(editor.createModel(await file.text(), undefined, Uri.file(file.name)));
 
 	store.set("fileHandle", fh);
 }
