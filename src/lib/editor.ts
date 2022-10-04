@@ -77,6 +77,14 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		},
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyQ]
 	})
+	editor.addAction({
+		id: "pencil.open_repo",
+		label: "Show Pencil on GitHub",
+		run: () => {
+			window.open("https://github.com/fructoland/pencil", "_blank", "noopener noreferrer")
+		},
+		contextMenuGroupId: "10_pencil"
+	})
 	// editorInstance.addAction({
 	// 	id: "editor.change_theme",
 	// 	label: "Toggle Dark/Light Theme",
