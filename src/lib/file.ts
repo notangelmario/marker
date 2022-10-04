@@ -1,7 +1,7 @@
-/// <reference types="https://esm.sh/v96/@types/wicg-file-system-access@2020.9.5/index.d.ts"/>
+import * as monaco from "monaco-editor";
+import { fileTypes } from "./languages";
+import { Store } from "./store";
 
-import { editor, Uri } from "monaco-editor";
-import { Store } from "./store.ts";
 
 export async function getFileHandle() {
 	const [fileSystemHandle] = await window.showOpenFilePicker();
@@ -18,20 +18,26 @@ export async function writeFile(fileHandle: FileSystemFileHandle, contents: stri
 	await writable.close();
 }
 
-export function onSave(fileHandle: FileSystemFileHandle, editorInstance: editor.IStandaloneCodeEditor) {
-	writeFile(fileHandle, editorInstance.getValue())
+export function onSave(fileHandle: FileSystemFileHandle, editor: monaco.editor.IStandaloneCodeEditor) {
+	writeFile(fileHandle, editor.getValue())
 }
 
-export async function onOpen(store: Store, editorInstance: editor.IStandaloneCodeEditor) {
+export async function onOpen(store: Store, editor: monaco.editor.IStandaloneCodeEditor) {
 	const fh = await getFileHandle();
 	const file = await fh.getFile();
 
-	editor.getModels().forEach((model) => model.dispose());
-	editorInstance.setModel(editor.createModel(await file.text(), undefined, Uri.file(file.name)));
+	const ext = getExtension(file.name);
+
+	monaco.editor.getModels().forEach((model) => model.dispose());
+	editor.setModel(monaco.editor.createModel(await file.text(), fileTypes.get(ext), monaco.Uri.file(file.name)));
 
 	store.set("fileHandle", fh);
 }
 
-export function onClose(editorInstance: editor.IStandaloneCodeEditor) {
-	editorInstance.setValue("");
+export function onClose(editor: monaco.editor.IStandaloneCodeEditor) {
+	editor.setValue("");
+}
+
+export function getExtension(fname: string) {
+	return fname.slice((Math.max(0, fname.lastIndexOf(".")) || Infinity) + 1);
 }

@@ -1,13 +1,10 @@
-import { editor, KeyMod, KeyCode } from "monaco-editor";
+import * as monaco from "monaco-editor";
 import { onClose, onOpen, onSave } from "./file";
 import { Store } from "./store";
-//@ts-ignore
-import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
-
 
 // Monaco editor doesn't have an API to change default keybindings
 // so we have to tap into internal api to change default keybindings
-export const updateKeyBinding = (editor: editor.IStandaloneCodeEditor, id: string, newKeyBinding: number) => {
+export const updateKeyBinding = (editor: monaco.editor.IStandaloneCodeEditor, id: string, newKeyBinding: number) => {
 	const action = editor.getAction(id);
 
 	//@ts-ignore 
@@ -18,16 +15,13 @@ export const updateKeyBinding = (editor: editor.IStandaloneCodeEditor, id: strin
 
 export function initEditor(editorWrapper: HTMLElement, store: Store) {
 	// const theme = store.get("theme");
-	const theme = window.matchMedia("(prefers-colors-scheme: dark)") ? "dark" : "light"
+	const theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
 
-	self.MonacoEnvironment = {
-		getWorker () {
-			return new editorWorker();
-		}
-	}
+	window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+		monaco.editor.setTheme(e.matches ? "vs-dark" : "vs");
+	})
 
-
-	const editorInstance = editor.create(editorWrapper, {
+	const editor = monaco.editor.create(editorWrapper, {
 		smoothScrolling: true,
 		automaticLayout: true,
 		padding: {
@@ -36,47 +30,47 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 		theme: theme === "dark" ? "vs-dark" : "vs"
 	})
 
-	addActions(editorInstance, store);
+	addActions(editor, store);
 
 	// Rebind command palette to CTRL+P
 	// To make things easier for Chromebook users
-	updateKeyBinding(editorInstance, "editor.action.quickCommand", KeyMod.CtrlCmd | KeyCode.KeyP);
+	updateKeyBinding(editor, "editor.action.quickCommand", monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyP);
 	
-	return { editorInstance }
+	return { editor }
 }
 
-function addActions(editorInstance: editor.IStandaloneCodeEditor, store: Store) {
-	const editorFileAvailableContext = editorInstance.createContextKey<boolean>('fileAvailable', false);
+function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
+	const editorFileAvailableContext = editor.createContextKey<boolean>('fileAvailable', false);
 
-	editorInstance.addAction({
+	editor.addAction({
 		id: "pencil.open_file",
 		label: "Open File...",
 		run: () => {
-			onOpen(store, editorInstance).then(() => {
+			onOpen(store, editor).then(() => {
 				editorFileAvailableContext.set(true);
 			});
 		},
-		keybindings: [KeyMod.CtrlCmd | KeyCode.KeyO]
+		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyO]
 	})
-	editorInstance.addAction({
+	editor.addAction({
 		id: "pencil.save_file",
 		label: "Save File",
 		precondition: "fileAvailable",
 		run: () => {
 			const fileHandle = store.get("fileHandle");
-			fileHandle && onSave(fileHandle, editorInstance)
+			fileHandle && onSave(fileHandle, editor)
 		},
-		keybindings: [KeyMod.CtrlCmd | KeyCode.KeyS]
+		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS]
 	})
-	editorInstance.addAction({
+	editor.addAction({
 		id: "pencil.close_file",
 		label: "Close File",
 		precondition: "fileAvailable",
 		run: () => {
-			onClose(editorInstance);
+			onClose(editor);
 			editorFileAvailableContext.set(false);
 		},
-		keybindings: [KeyMod.CtrlCmd | KeyCode.KeyQ]
+		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyQ]
 	})
 	// editorInstance.addAction({
 	// 	id: "editor.change_theme",

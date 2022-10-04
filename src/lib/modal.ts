@@ -1,6 +1,6 @@
-import { editor } from "monaco-editor";
+import * as monaco from "monaco-editor";
 
-const modalWidget = (options?: ModalOptions): editor.IOverlayWidget => ({
+const modalWidget = (options?: ModalOptions): monaco.editor.IOverlayWidget => ({
 	getId: function () {
 		return 'pencil.modal';
 	},
@@ -21,14 +21,14 @@ interface ModalOptions {
 	text: string
 }
 
-export function openModal(editorInstance: editor.IStandaloneCodeEditor, options: ModalOptions) {
-	editorInstance.addOverlayWidget(modalWidget(options));
+export function openModal(editor: monaco.editor.IStandaloneCodeEditor, options: ModalOptions) {
+	editor.addOverlayWidget(modalWidget(options));
 
 	if (options.autoHide) {
-		setTimeout(() => closeModal(editorInstance), 5000)
+		setTimeout(() => closeModal(editor), 5000)
 	}
 }
 
-export function closeModal(editorInstance: editor.IStandaloneCodeEditor) {
-	editorInstance.removeOverlayWidget(modalWidget());
+export function closeModal(editor: monaco.editor.IStandaloneCodeEditor) {
+	editor.removeOverlayWidget(modalWidget());
 }
