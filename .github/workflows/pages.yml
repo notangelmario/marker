@@ -49,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
-      - uses: actions/download-artifact@master
+        uses: actions/download-artifact@master
         with:
           name: build-output
           path: ./dist
