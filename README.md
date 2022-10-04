@@ -1,6 +1,6 @@
 # Pencil
 
-Pencil  is a very simple web editor based on [Monaco Editor](https://microsoft.github.io/monaco-editor/).
+Pencil is a minimalist web editor based on [Monaco Editor](https://microsoft.github.io/monaco-editor/).
 
 ## 🌐 Languages
 
