@@ -1,4 +1,5 @@
 import monaco from "./lib/monaco";
+import { registerSW } from 'virtual:pwa-register'
 import { initStore } from "./lib/store";
 import { initEditor } from "./lib/editor";
 import { closeModal, openModal } from "./lib/modal";
@@ -14,6 +15,14 @@ const editor = initEditor(editorWrapper, store);
 editor.focus();
 
 enableStatus(editor);
+
+
+registerSW({
+  onNeedRefresh() {},
+  onOfflineReady() {
+  	
+  },
+})
 
 // Handles tutorial
 if (!store.get("visited")) {

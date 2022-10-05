@@ -3,7 +3,7 @@ import * as monaco from "monaco-editor";
 
 const statusWidget: monaco.editor.IOverlayWidget = {
 	getId: function () {
-		return 'pencil.modal';
+		return 'pencil.status';
 	},
 	getDomNode: function () {
 		const domNode = document.createElement('div');
@@ -30,4 +30,15 @@ export function enableStatus(editor: monaco.editor.IStandaloneCodeEditor) {
 
 export function disableStatus(editor: monaco.editor.IStandaloneCodeEditor) {
 	editor.removeOverlayWidget(statusWidget);
+}
+
+export function createNotice(text: string) {
+	const element = document.getElementById("status-notice");
+
+	if (!element) return;
+
+	element.innerText = text;
+	element.style.opacity = "1";
+
+	setTimeout(() => element.style.opacity = "0", 5000)
 }

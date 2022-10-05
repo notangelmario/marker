@@ -1,5 +1,5 @@
 import monaco from "./monaco";
-import { onClose, onOpen, onSave } from "./file";
+import { onClose, onOpen, onSave, initDropFile } from "./file";
 import { Store } from "./store";
 
 // Monaco editor doesn't have an API to change default keybindings
