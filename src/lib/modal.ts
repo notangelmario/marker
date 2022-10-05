@@ -1,4 +1,5 @@
-import * as monaco from "monaco-editor";
+import monaco from "./monaco";
+
 
 const modalWidget = (options?: ModalOptions): monaco.editor.IOverlayWidget => ({
 	getId: function () {

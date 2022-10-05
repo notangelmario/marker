@@ -1,8 +1,9 @@
-import * as monaco from "monaco-editor";
+import monaco from "./lib/monaco";
 import { initStore } from "./lib/store";
 import { initEditor } from "./lib/editor";
 import { closeModal, openModal } from "./lib/modal";
 import { initLanguages } from "./lib/languages";
+import { enableStatus } from "./lib/status";
 
 const editorWrapper = document.getElementById("app")!;
 
@@ -11,6 +12,8 @@ initLanguages();
 const editor = initEditor(editorWrapper, store);
 
 editor.focus();
+
+enableStatus(editor);
 
 // Handles tutorial
 if (!store.get("visited")) {

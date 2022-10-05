@@ -1,4 +1,4 @@
-import * as monaco from "monaco-editor";
+import monaco from "./monaco";
 import { fileTypes } from "./languages";
 import { Store } from "./store";
 
