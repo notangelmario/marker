@@ -1,10 +1,11 @@
 import monaco from "./lib/monaco";
+//@ts-ignore
 import { registerSW } from 'virtual:pwa-register'
 import { initStore } from "./lib/store";
 import { initEditor } from "./lib/editor";
 import { closeModal, openModal } from "./lib/modal";
 import { initLanguages } from "./lib/languages";
-import { enableStatus } from "./lib/status";
+import { createNotice, enableStatus } from "./lib/status";
 
 const editorWrapper = document.getElementById("app")!;
 
@@ -18,9 +19,11 @@ enableStatus(editor);
 
 
 registerSW({
-  onNeedRefresh() {},
+  onNeedRefresh() {
+  	createNotice("Pencil will update next time")
+  },
   onOfflineReady() {
-  	
+  	createNotice("Pencil is ready to be used offline")
   },
 })
 

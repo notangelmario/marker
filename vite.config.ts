@@ -7,7 +7,11 @@ export default defineConfig({
   plugins: [
     VitePWA({
       injectRegister: "inline",
-      registerType: "autoUpdate"
+      registerType: "autoUpdate",
+      workbox: {
+        cleanupOutdatedCaches: true,
+        maximumFileSizeToCacheInBytes: 30000000
+      }
     }),
   ]
 });
