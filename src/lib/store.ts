@@ -32,5 +32,5 @@ export class Store {
 export function initStore() {
 	const store = new Store();
 		
-	return { store }
+	return store;
 }

@@ -41,3 +41,30 @@ export function onClose(editor: monaco.editor.IStandaloneCodeEditor) {
 export function getExtension(fname: string) {
 	return fname.slice((Math.max(0, fname.lastIndexOf(".")) || Infinity) + 1);
 }
+
+export function initDropFile(element: HTMLElement, editor: monaco.editor.IStandaloneCodeEditor, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>) {
+	async function dropHandler(e: DragEvent) {
+		console.log('File(s) dropped');
+	  
+		e.preventDefault();
+		
+		if (e.dataTransfer?.items) {
+			const fileHandleRaw = await Array.from(e.dataTransfer.items)[0].getAsFileSystemHandle()
+			if (fileHandleRaw?.kind !== "file") return;
+
+			const fileHandle = fileHandleRaw as FileSystemFileHandle;
+			const file = await fileHandle.getFile();
+
+			const ext = getExtension(file.name);
+
+			monaco.editor.getModels().forEach((model) => model.dispose());
+			editor.setModel(monaco.editor.createModel(await file.text(), fileTypes.get(ext), monaco.Uri.file(file.name)));
+
+			fileAvailableContext.set(true);
+
+			store.set("fileHandle", fileHandle);
+		}
+	}
+	
+	element.addEventListener("drop", dropHandler, false);
+}

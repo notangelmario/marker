@@ -1,5 +1,5 @@
 import * as monaco from "monaco-editor";
-import { onClose, onOpen, onSave } from "./file";
+import { initDropFile, onClose, onOpen, onSave } from "./file";
 import { Store } from "./store";
 
 // Monaco editor doesn't have an API to change default keybindings
@@ -41,12 +41,13 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 	// To make things easier for Chromebook users
 	updateKeyBinding(editor, "editor.action.quickCommand", monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyP);
 	
-	return { editor }
+	return editor;
 }
 
 function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 	const editorFileAvailableContext = editor.createContextKey<boolean>('fileAvailable', false);
 
+	initDropFile(document.body, editor, store, editorFileAvailableContext)
 	editor.addAction({
 		id: "pencil.open_file",
 		label: "Open File...",

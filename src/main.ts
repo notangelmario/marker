@@ -6,9 +6,9 @@ import { initLanguages } from "./lib/languages";
 
 const editorWrapper = document.getElementById("app")!;
 
-const { store } = initStore();
+const store = initStore();
 initLanguages();
-const { editor } = initEditor(editorWrapper, store);
+const editor = initEditor(editorWrapper, store);
 
 editor.focus();
 
