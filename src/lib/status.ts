@@ -9,6 +9,7 @@ const statusWidget: monaco.editor.IOverlayWidget = {
 		const domNode = document.createElement('div');
 		domNode.id = "pencil-status"
 		domNode.innerHTML = `
+			<span id="status-notice"></span>
 			<div class="spacer"></div>
 			<span
 				id="version-display"
