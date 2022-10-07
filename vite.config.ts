@@ -10,7 +10,7 @@ export default defineConfig({
         enabled: false // Enable install on dev mode
       },
       injectRegister: null,
-      registerType: "autoUpdate",
+      registerType: "prompt",
       workbox: {
         cleanupOutdatedCaches: true,
         maximumFileSizeToCacheInBytes: 30000000
