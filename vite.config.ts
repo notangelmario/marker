@@ -7,9 +7,9 @@ export default defineConfig({
   plugins: [
     VitePWA({
       devOptions: {
-        enabled: true
+        enabled: false // Enable install on dev mode
       },
-      injectRegister: "inline",
+      injectRegister: null,
       registerType: "autoUpdate",
       workbox: {
         cleanupOutdatedCaches: true,

@@ -1,5 +1,4 @@
 import monaco from "./monaco";
-import { fileTypes } from "./languages";
 import { Store } from "./store";
 
 
@@ -30,6 +29,25 @@ export async function setEditorText(editor: monaco.editor.IStandaloneCodeEditor,
 	store.set("fileHandle", fileHandle);
 }
 
+async function getNewFileHandle() {
+  const options: SaveFilePickerOptions = {
+  	excludeAcceptAllOption: true,
+  	suggestedName: "new.txt",
+    types: [...fileTypes.keys()].map((v) => ({
+    	accept: {
+    		[`text/${fileTypes.get(v)}`]: "." + v
+    	}
+    }))
+  };
+  const handle = await window.showSaveFilePicker(options);
+  return handle;
+}
+
+export async function onCreate(editor: monaco.editor.IStandaloneCodeEditor, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>) {
+	const fileHandle = await getNewFileHandle()
+
+	setEditorText(editor, fileHandle, store, fileAvailableContext)
+}
 
 export function onSave(fileHandle: FileSystemFileHandle, editor: monaco.editor.IStandaloneCodeEditor) {
 	writeFile(fileHandle, editor.getValue())
@@ -81,3 +99,16 @@ export function initLaunchWithFile(editor: monaco.editor.IStandaloneCodeEditor, 
 		setEditorText(editor, fileHandle, store, fileAvailableContext)
   });
 }
+
+export const fileTypes = new Map<string, string>([
+	["txt", "text"],
+	["c", "c"],
+	["py", "python"],
+	["cpp", "cpp"],
+	["md", "markdown"],
+	["css", "css"],
+	["html", "html"],
+    ["json", "json"],
+	["js", "javascript"],
+    ["ts", "typescript"]
+])

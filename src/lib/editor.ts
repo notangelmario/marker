@@ -1,5 +1,5 @@
 import monaco from "./monaco";
-import { onClose, onOpen, onSave, initDropFile, initLaunchWithFile } from "./file";
+import { onClose, onOpen, onSave, initDropFile, initLaunchWithFile, onCreate } from "./file";
 import { Store } from "./store";
 
 // Monaco editor doesn't have an API to change default keybindings
@@ -82,6 +82,13 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 			const fileHandle = store.get("fileHandle");
 			fileHandle && onSave(fileHandle, editor)
 		},
+		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS]
+	})
+	editor.addAction({
+		id: "pencil.create_file",
+		label: "Create New File...",
+		precondition: "!fileAvailable",
+		run: () => onCreate(editor, store, fileAvailableContext),
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS]
 	})
 	editor.addAction({
