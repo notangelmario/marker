@@ -28,5 +28,24 @@
     "start_url": "/",
     "theme_color": "#ffffff",
     "background_color": "#ffffff",
-    "display": "standalone"
+    "display": "standalone",
+
+    "file_handlers": [
+        {
+            "action": "/",
+            "accept": {
+                "text/*": [
+                    ".txt",
+                    ".md",
+                    ".c",
+                    ".cpp",
+                    ".html",
+                    ".css",
+                    ".ts",
+                    ".js"
+                ]
+            },
+            "launch_type": "single-client"
+        }
+    ]
 }

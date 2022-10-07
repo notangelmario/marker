@@ -6,6 +6,9 @@ import { VitePWA } from "vite-plugin-pwa";
 export default defineConfig({
   plugins: [
     VitePWA({
+      devOptions: {
+        enabled: true
+      },
       injectRegister: "inline",
       registerType: "autoUpdate",
       workbox: {

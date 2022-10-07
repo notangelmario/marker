@@ -1,5 +1,5 @@
 import monaco from "./monaco";
-import { onClose, onOpen, onSave, initDropFile } from "./file";
+import { onClose, onOpen, onSave, initDropFile, initLaunchWithFile } from "./file";
 import { Store } from "./store";
 
 // Monaco editor doesn't have an API to change default keybindings
@@ -35,6 +35,8 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 		theme: theme === "dark" ? "vs-dark" : "vs"
 	})
 
+	removeDefaultKeybindings();
+
 	addActions(editor, store);
 
 	// Rebind command palette to CTRL+P
@@ -44,18 +46,30 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 	return editor;
 }
 
-function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
-	const editorFileAvailableContext = editor.createContextKey<boolean>('fileAvailable', false);
+export function removeDefaultKeybindings() {
+	document.addEventListener("keydown", (e) => {
+		if (e.ctrlKey && e.key === "s") {
+			e.preventDefault();
+		}
+		if (e.ctrlKey && e.key === "o") {
+			e.preventDefault();
+		}
+		if (e.ctrlKey && e.key === "p") {
+			e.preventDefault();
+		}
+	})
+}
 
-	initDropFile(document.body, editor, store, editorFileAvailableContext)
+function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
+	const fileAvailableContext = editor.createContextKey<boolean>('fileAvailable', false);
+
+	initDropFile(document.body, editor, store, fileAvailableContext)
+	initLaunchWithFile(editor, store, fileAvailableContext);
+
 	editor.addAction({
 		id: "pencil.open_file",
 		label: "Open File...",
-		run: () => {
-			onOpen(store, editor).then(() => {
-				editorFileAvailableContext.set(true);
-			});
-		},
+		run: () => onOpen(store, editor, fileAvailableContext),
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyO]
 	})
 	editor.addAction({
@@ -72,10 +86,7 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		id: "pencil.close_file",
 		label: "Close File",
 		precondition: "fileAvailable",
-		run: () => {
-			onClose(editor);
-			editorFileAvailableContext.set(false);
-		},
+		run: () => onClose(editor, store, fileAvailableContext),
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyQ]
 	})
 	editor.addAction({
@@ -84,7 +95,7 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		run: () => {
 			window.open("https://github.com/fructoland/pencil", "_blank", "noopener noreferrer")
 		},
-		contextMenuGroupId: "10_pencil"
+		contextMenuGroupId: "9_pencil"
 	})
 	// editorInstance.addAction({
 	// 	id: "editor.change_theme",
