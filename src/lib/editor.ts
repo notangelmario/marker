@@ -43,6 +43,8 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 	// To make things easier for Chromebook users
 	updateKeyBinding(editor, "editor.action.quickCommand", monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyP);
 	
+	editor.focus();
+
 	return editor;
 }
 

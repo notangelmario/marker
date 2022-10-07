@@ -4,19 +4,15 @@ import { registerSW } from 'virtual:pwa-register'
 import { initStore } from "./lib/store";
 import { initEditor } from "./lib/editor";
 import { closeModal, openModal } from "./lib/modal";
-import { initLanguages } from "./lib/languages";
+import { initLanguageWorkers } from "./lib/languages";
 import { createNotice, enableStatus } from "./lib/status";
 
 const editorWrapper = document.getElementById("app")!;
 
 const store = initStore();
-initLanguages();
+initLanguageWorkers();
 const editor = initEditor(editorWrapper, store);
-
-editor.focus();
-
 enableStatus(editor);
-
 
 registerSW({
   onNeedRefresh() {

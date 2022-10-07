@@ -10,7 +10,7 @@ import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 
 // MonacoEnvironment should be initialized before the editor
-export function initLanguages() {
+export function initLanguageWorkers() {
 	self.MonacoEnvironment = {
 		getWorker(_, label) {
 			if (label === 'json') {
@@ -31,10 +31,16 @@ export function initLanguages() {
 }
 
 export const fileTypes = new Map<string, string>([
+	// Full support
 	["css", "css"],
 	["html", "html"],
     ["json", "json"],
 	["js", "javascript"],
     ["mjs", "javascript"],
-    ["ts", "typescript"]
+    ["ts", "typescript"],
+    // Semi support
+    ["c", "cpp"],
+    ["cpp", "cpp"],
+    ["py", "python"],
+    ["md", "markdown"]
 ])
