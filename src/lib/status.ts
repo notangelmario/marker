@@ -9,13 +9,13 @@ const statusWidget: monaco.editor.IOverlayWidget = {
 		const domNode = document.createElement('div');
 		domNode.id = "pencil-status"
 		domNode.innerHTML = `
-			<span id="status-notice"></span>
+			<p id="status-notice"></p>
 			<div class="spacer"></div>
-			<span
+			<p
 				id="version-display"
 			>
 				${version}
-			</span>
+			</p>
 		`;
 		
 		return domNode;
@@ -25,12 +25,8 @@ const statusWidget: monaco.editor.IOverlayWidget = {
 	}
 };
 
-export function enableStatus(editor: monaco.editor.IStandaloneCodeEditor) {
+export function initStatus(editor: monaco.editor.IStandaloneCodeEditor) {
 	editor.addOverlayWidget(statusWidget);
-}
-
-export function disableStatus(editor: monaco.editor.IStandaloneCodeEditor) {
-	editor.removeOverlayWidget(statusWidget);
 }
 
 export function createNotice(text: string) {

@@ -60,6 +60,7 @@ html, body, #app {
 
 #version-display {
 	font-size: 12px;
+	display: table-cell;
 }
 
 #status-notice {

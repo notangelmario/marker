@@ -5,21 +5,21 @@ import { initStore } from "./lib/store";
 import { initEditor } from "./lib/editor";
 import { closeModal, openModal } from "./lib/modal";
 import { initLanguageWorkers } from "./lib/languages";
-import { createNotice, enableStatus } from "./lib/status";
+import { createNotice, initStatus } from "./lib/status";
 
 const editorWrapper = document.getElementById("app")!;
 
 const store = initStore();
 initLanguageWorkers();
 const editor = initEditor(editorWrapper, store);
-enableStatus(editor);
+initStatus(editor);
 
 registerSW({
   onNeedRefresh() {
-  	createNotice("Pencil will update next time")
+  	createNotice("Pencil will update at the next restart");
   },
   onOfflineReady() {
-  	createNotice("Pencil is ready to be used offline")
+  	createNotice("Pencil is ready to be used offline");
   },
 })
 

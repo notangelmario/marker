@@ -1,5 +1,6 @@
 import monaco from "./monaco";
 import { onClose, onOpen, onSave, initDropFile, initLaunchWithFile, onCreate } from "./file";
+import { createNotice } from "./status";
 import { Store } from "./store";
 
 // Monaco editor doesn't have an API to change default keybindings
@@ -50,13 +51,13 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 
 export function removeDefaultKeybindings() {
 	document.addEventListener("keydown", (e) => {
-		if (e.ctrlKey && e.key === "s") {
+		if ((e.ctrlKey || e.metaKey) && e.key === "s") {
 			e.preventDefault();
 		}
-		if (e.ctrlKey && e.key === "o") {
+		if ((e.ctrlKey || e.metaKey) && e.key === "o") {
 			e.preventDefault();
 		}
-		if (e.ctrlKey && e.key === "p") {
+		if ((e.ctrlKey || e.metaKey) && e.key === "p") {
 			e.preventDefault();
 		}
 	})
@@ -79,8 +80,21 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		label: "Save File",
 		precondition: "fileAvailable",
 		run: () => {
-			const fileHandle = store.get("fileHandle");
-			fileHandle && onSave(fileHandle, editor)
+			const fileHandle = store.get<FileSystemFileHandle>("fileHandle");
+
+			// In case fileAvaiableContext is true
+			// but it is not stored in store
+			// try to create a new file handle
+			// Do not touch this. It's only a safety precaution
+			// The user would rather have to see another popup
+			// then to lose all work on a specific file
+			if (!fileHandle) {
+				onCreate(editor, store, fileAvailableContext);
+			} else {
+				onSave(fileHandle, editor).then(() => 
+					createNotice("Saved!")
+				);
+			}
 		},
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS]
 	})

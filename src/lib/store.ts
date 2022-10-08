@@ -16,7 +16,7 @@ export class Store {
 		})
 	}
 
-	get(key: string): any {
+	get<Type>(key: string): Type | null {
 		return this.s.get(key) ?? null;
 	}
 
