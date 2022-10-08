@@ -37,20 +37,16 @@ export async function setEditorText(editor: monaco.editor.IStandaloneCodeEditor,
 
 async function getNewFileHandle() {
 	try {
-		console.log([...fileTypes.keys()].map((v) => ({
-				accept: {
-    				[fileMimeTypes.get(v)!]: "." + v
-    			}
-			})))
-
 		const handle = await window.showSaveFilePicker({
 			excludeAcceptAllOption: true,
 			suggestedName: "new.txt",
-			types: [...fileTypes.keys()].map((v) => ({
-				accept: {
-    				[fileMimeTypes.get(v)!]: "." + v
-    			}
-			}))
+			types: [...fileTypes.keys()]
+				.filter((v) => !!fileMimeTypes.get(v))
+				.map((v) => ({
+					accept: {
+    					[fileMimeTypes.get(v)!]: "." + v
+    				}
+				}))
 		});
 		
 		return handle;
@@ -144,13 +140,11 @@ export const fileTypes = new Map<string, string>([
 export const fileMimeTypes = new Map<string, string>([
 	["txt", "text/plain"],
 	["c", "text/x-c"],
-	["cpp", "text/x-c"],
 	["py", "text/x-python"],
 	["md", "text/markdown"],
 	["css", "text/css"],
 	["html", "text/html"],
 	["json", "application/json"],
 	["js", "text/javascript"],
-	["mjs", "text/javascript"],
 	["ts", "text/x-typescript"]
 ])
