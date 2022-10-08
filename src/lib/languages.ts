@@ -29,18 +29,3 @@ export function initLanguageWorkers() {
 		}	
 	}
 }
-
-export const fileTypes = new Map<string, string>([
-	// Full support
-	["css", "css"],
-	["html", "html"],
-    ["json", "json"],
-	["js", "javascript"],
-    ["mjs", "javascript"],
-    ["ts", "typescript"],
-    // Semi support
-    ["c", "cpp"],
-    ["cpp", "cpp"],
-    ["py", "python"],
-    ["md", "markdown"]
-])

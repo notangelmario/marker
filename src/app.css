@@ -76,6 +76,7 @@ html, body, #app {
 	transition: opacity 1s ease-in-out;
 }
 
+/* Unsupported device or browser notice */
 #unsupported {
 	font-family: "Fira Code";
 	height: 100%;

@@ -15,7 +15,7 @@ Pencil has 2 kinds of support for languages:
 * JavaScript
 * TypeScript
 
-#### Semi support
+#### Partial support
 * C
 * C++
 * Python
