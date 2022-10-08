@@ -27,25 +27,22 @@
     ],
     "start_url": "/",
     "theme_color": "#ffffff",
-    "background_color": "#ffffff",
     "display": "standalone",
 
     "file_handlers": [
         {
             "action": "/",
             "accept": {
-                "text/*": [
-                    ".txt",
-                    ".md",
-                    ".c",
-                    ".cpp",
-                    ".py",
-                    ".json",
-                    ".html",
-                    ".css",
-                    ".ts",
-                    ".js"
-                ]
+                "text/plain": ".txt",
+                "text/c": ".c",
+                "text/python": ".py",
+                "text/cpp": ".cpp",
+                "text/markdown": ".md",
+                "text/css": ".css",
+                "text/html": ".html",
+                "application/json": ".json",
+                "text/javascript": ".js",
+                "text/typescript": ".ts"
             },
             "launch_type": "single-client"
         }

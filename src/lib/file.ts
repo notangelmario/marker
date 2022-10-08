@@ -37,12 +37,18 @@ export async function setEditorText(editor: monaco.editor.IStandaloneCodeEditor,
 
 async function getNewFileHandle() {
 	try {
+		console.log([...fileTypes.keys()].map((v) => ({
+				accept: {
+    				[fileMimeTypes.get(v)!]: "." + v
+    			}
+			})))
+
 		const handle = await window.showSaveFilePicker({
 			excludeAcceptAllOption: true,
 			suggestedName: "new.txt",
 			types: [...fileTypes.keys()].map((v) => ({
 				accept: {
-    				[`text/${fileTypes.get(v)}`]: "." + v
+    				[fileMimeTypes.get(v)!]: "." + v
     			}
 			}))
 		});
@@ -124,12 +130,25 @@ export function initLaunchWithFile(editor: monaco.editor.IStandaloneCodeEditor, 
 export const fileTypes = new Map<string, string>([
 	["txt", "text"],
 	["c", "c"],
-	["py", "python"],
 	["cpp", "cpp"],
+	["py", "python"],
 	["md", "markdown"],
 	["css", "css"],
 	["html", "html"],
 	["json", "json"],
 	["js", "javascript"],
 	["ts", "typescript"]
+])
+
+export const fileMimeTypes = new Map<string, string>([
+	["txt", "text/plain"],
+	["c", "text/x-c"],
+	["cpp", "text/x-c"],
+	["py", "text/x-python"],
+	["md", "text/markdown"],
+	["css", "text/css"],
+	["html", "text/html"],
+	["json", "application/json"],
+	["js", "text/javascript"],
+	["ts", "text/x-typescript"]
 ])
