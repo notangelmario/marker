@@ -33,7 +33,9 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 		padding: {
 			top: 32,
 		},
-		theme: theme === "dark" ? "vs-dark" : "vs"
+		theme: theme === "dark" ? "vs-dark" : "vs",
+		insertSpaces: false,
+		tabSize: 4
 	})
 
 	removeDefaultKeybindings();
