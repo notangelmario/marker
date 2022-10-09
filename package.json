@@ -2,7 +2,7 @@
   "name": "miniated",
   "private": true,
   "author": "Savin Angel-Mario (savin@fructo.land)",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
