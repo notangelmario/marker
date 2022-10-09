@@ -18,10 +18,10 @@ if (isCompat()) {
 
 	registerSW({
 	  onNeedRefresh() {
-	  	createNotice("Pencil will update at the next restart");
+	  	createNotice("Miniated will update at the next restart");
 	  },
 	  onOfflineReady() {
-	  	createNotice("Pencil is ready to be used offline");
+	  	createNotice("Miniated is ready to be used offline");
 	  },
 	})
 
@@ -38,7 +38,7 @@ if (isCompat()) {
 			editor.trigger("ctrl+p", "editor.action.quickCommand", null);
 
 			closeModal(editor);
-			openModal(editor, { autoHide: true, text: "This is the Command Palette! This is how you get around Pencil! Have fun!" })
+			openModal(editor, { autoHide: true, text: "This is the Command Palette! This is how you get around Miniated! Have fun!" })
 		}, "!intro-triggered")
 	}
 } else {

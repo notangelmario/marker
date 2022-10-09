@@ -72,13 +72,13 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 	initLaunchWithFile(editor, store, fileAvailableContext);
 
 	editor.addAction({
-		id: "pencil.open_file",
+		id: "miniated.open_file",
 		label: "Open File...",
 		run: () => onOpen(store, editor, fileAvailableContext),
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyO]
 	})
 	editor.addAction({
-		id: "pencil.save_file",
+		id: "miniated.save_file",
 		label: "Save File",
 		precondition: "fileAvailable",
 		run: () => {
@@ -101,26 +101,26 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS]
 	})
 	editor.addAction({
-		id: "pencil.create_file",
+		id: "miniated.create_file",
 		label: "Create New File...",
 		precondition: "!fileAvailable",
 		run: () => onCreate(editor, store, fileAvailableContext),
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS]
 	})
 	editor.addAction({
-		id: "pencil.close_file",
+		id: "miniated.close_file",
 		label: "Close File",
 		precondition: "fileAvailable",
 		run: () => onClose(editor, store, fileAvailableContext),
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyQ]
 	})
 	editor.addAction({
-		id: "pencil.open_repo",
-		label: "Show Pencil on GitHub",
+		id: "miniated.open_repo",
+		label: "Show Miniated on GitHub",
 		run: () => {
-			window.open("https://github.com/fructoland/pencil", "_blank", "noopener noreferrer")
+			window.open("https://github.com/fructoland/miniated", "_blank", "noopener noreferrer")
 		},
-		contextMenuGroupId: "9_pencil"
+		contextMenuGroupId: "9_miniated"
 	})
 	// editorInstance.addAction({
 	// 	id: "editor.change_theme",

@@ -3,11 +3,11 @@ import monaco from "./monaco";
 
 const modalWidget = (options?: ModalOptions): monaco.editor.IOverlayWidget => ({
 	getId: function () {
-		return 'pencil.modal';
+		return 'miniated.modal';
 	},
 	getDomNode: function () {
 		const domNode = document.createElement('div');
-		domNode.id = "pencil-modal";
+		domNode.id = "miniated-modal";
 		domNode.style.opacity = "0";
 		domNode.innerHTML = options?.text || "";
 		
@@ -25,7 +25,7 @@ interface ModalOptions {
 
 export function openModal(editor: monaco.editor.IStandaloneCodeEditor, options: ModalOptions) {
 	editor.addOverlayWidget(modalWidget(options));
-	const modal = document.getElementById("pencil-modal")!;
+	const modal = document.getElementById("miniated-modal")!;
 
 	modal.style.opacity = "1";
 

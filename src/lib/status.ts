@@ -3,11 +3,11 @@ import * as monaco from "monaco-editor";
 
 const statusWidget: monaco.editor.IOverlayWidget = {
 	getId: function () {
-		return 'pencil.status';
+		return 'miniated.status';
 	},
 	getDomNode: function () {
 		const domNode = document.createElement('div');
-		domNode.id = "pencil-status"
+		domNode.id = "miniated-status"
 		domNode.innerHTML = `
 			<p id="status-notice"></p>
 			<div class="spacer"></div>
@@ -30,7 +30,7 @@ export function initStatus(editor: monaco.editor.IStandaloneCodeEditor) {
 }
 
 export function createNotice(text: string) {
-	const element = document.getElementById("status-notice");
+	const element = document.getElementById("miniated-notice");
 
 	if (!element) return;
 

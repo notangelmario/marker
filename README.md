@@ -1,10 +1,17 @@
-# Pencil
+# Miniated
 
-Pencil is a minimalist web editor based on [Monaco Editor](https://microsoft.github.io/monaco-editor/).
+Miniated is a minimalist web editor based on [Monaco Editor](https://microsoft.github.io/monaco-editor/).
+
+## ✨ Features
+
+* Minimalist design
+* Good for casual users, good for power users
+* Best default settings
+* Easy to learn keyboard shortcuts
 
 ## 🌐 Languages
 
-Pencil has 2 kinds of support for languages:
+Miniated has 2 kinds of support for languages:
 * Full support (supports autocomplete, suggestions, etc.)
 * Partial support (only syntax highlighting)
 
