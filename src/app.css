@@ -80,6 +80,7 @@ html, body, #app {
 #unsupported {
 	font-family: "Fira Code";
 	height: 100%;
+	color: var(--vscode-editor-foreground);
 }
 
 #unsupported > div {
