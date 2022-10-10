@@ -9,7 +9,7 @@ const statusWidget: monaco.editor.IOverlayWidget = {
 		const domNode = document.createElement('div');
 		domNode.id = "miniated-status"
 		domNode.innerHTML = `
-			<p id="status-notice"></p>
+			<p id="status-notice" style="opacity: 0;"></p>
 			<div class="spacer"></div>
 			<p
 				id="version-display"
@@ -30,7 +30,7 @@ export function initStatus(editor: monaco.editor.IStandaloneCodeEditor) {
 }
 
 export function createNotice(text: string) {
-	const element = document.getElementById("miniated-notice");
+	const element = document.getElementById("status-notice");
 
 	if (!element) return;
 

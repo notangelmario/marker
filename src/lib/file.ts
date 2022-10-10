@@ -35,7 +35,7 @@ export async function setEditorText(editor: monaco.editor.IStandaloneCodeEditor,
 	store.set("fileHandle", fileHandle);
 }
 
-async function getNewFileHandle() {
+export async function getNewFileHandle() {
 	try {
 		const handle = await window.showSaveFilePicker({
 			excludeAcceptAllOption: true,
@@ -77,8 +77,10 @@ export async function onSave(fileHandle: FileSystemFileHandle, editor: monaco.ed
 export async function onOpen(store: Store, editor: monaco.editor.IStandaloneCodeEditor, fileAvailableContext: monaco.editor.IContextKey<boolean>) {
 	const fileHandle = await getFileHandle();
 
+
 	if (fileHandle) {
-		await setEditorText(editor, fileHandle, store, fileAvailableContext)
+		await setEditorText(editor, fileHandle, store, fileAvailableContext);
+		console.log(editor.getModel()?.getLanguageId());
 	}
 }
 
@@ -124,7 +126,7 @@ export function initLaunchWithFile(editor: monaco.editor.IStandaloneCodeEditor, 
 }
 
 export const fileTypes = new Map<string, string>([
-	["txt", "text"],
+	["txt", "plaintext"],
 	["c", "c"],
 	["cpp", "cpp"],
 	["py", "python"],

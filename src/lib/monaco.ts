@@ -26,4 +26,7 @@ import "monaco-editor/esm/vs/basic-languages/cpp/cpp.contribution";
 
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 
+//@ts-ignore
+export { IQuickInputService } from "monaco-editor/esm/vs/platform/quickinput/common/quickInput";
+
 export default monaco;

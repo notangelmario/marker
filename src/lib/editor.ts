@@ -1,7 +1,8 @@
-import monaco from "./monaco";
+import monaco, { IQuickInputService } from "./monaco";
 import { onClose, onOpen, onSave, initDropFile, initLaunchWithFile, onCreate } from "./file";
 import { createNotice } from "./status";
 import { Store } from "./store";
+import { convertToMarkdown, exportToMarkdown } from "./markdown";
 
 // Monaco editor doesn't have an API to change default keybindings
 // so we have to tap into internal api to change default keybindings
@@ -66,7 +67,8 @@ export function removeDefaultKeybindings() {
 }
 
 function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
-	const fileAvailableContext = editor.createContextKey<boolean>('fileAvailable', false);
+	const fileAvailableContext = editor.createContextKey<boolean>("fileAvailable", false);
+	const fileTypeContext = editor.createContextKey<string>("fileType", "");
 
 	initDropFile(document.body, editor, store, fileAvailableContext)
 	initLaunchWithFile(editor, store, fileAvailableContext);
@@ -74,9 +76,10 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 	editor.addAction({
 		id: "miniated.open_file",
 		label: "Open File...",
-		run: () => onOpen(store, editor, fileAvailableContext),
+		run: () => onOpen(store, editor, fileAvailableContext, fileTypeContext),
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyO]
 	})
+	console.log(editor.getModel()?.getLanguageId());
 	editor.addAction({
 		id: "miniated.save_file",
 		label: "Save File",
@@ -91,7 +94,7 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 			// The user would rather have to see another popup
 			// then to lose all work on a specific file
 			if (!fileHandle) {
-				onCreate(editor, store, fileAvailableContext);
+				onCreate(editor, store, fileAvailableContext, fileTypeContext);
 			} else {
 				onSave(fileHandle, editor).then(() => 
 					createNotice("Saved!")
@@ -106,14 +109,20 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		precondition: "!fileAvailable",
 		run: () => onCreate(editor, store, fileAvailableContext),
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS]
-	})
+	});
+	editor.addAction({
+		id: "miniated.export_markdown",
+		label: "Export Markdown File to HTML...",
+		run: exportToMarkdown,
+		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyE]
+	});
 	editor.addAction({
 		id: "miniated.close_file",
 		label: "Close File",
 		precondition: "fileAvailable",
 		run: () => onClose(editor, store, fileAvailableContext),
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyQ]
-	})
+	});
 	editor.addAction({
 		id: "miniated.open_repo",
 		label: "Show Miniated on GitHub",
@@ -121,7 +130,7 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 			window.open("https://github.com/fructoland/miniated", "_blank", "noopener noreferrer")
 		},
 		contextMenuGroupId: "9_miniated"
-	})
+	});
 	// editorInstance.addAction({
 	// 	id: "editor.change_theme",
 	// 	label: "Toggle Dark/Light Theme",
