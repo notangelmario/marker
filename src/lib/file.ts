@@ -134,6 +134,7 @@ export const fileTypes = new Map<string, string>([
 	["css", "css"],
 	["html", "html"],
 	["json", "json"],
+	["webmanifest", "json"],
 	["js", "javascript"],
 	["mjs", "javascript"],
 	["ts", "typescript"]
@@ -147,6 +148,7 @@ export const fileMimeTypes = new Map<string, string>([
 	["css", "text/css"],
 	["html", "text/html"],
 	["json", "application/json"],
+	["webmanifest", "application/manifest+json"],
 	["js", "text/javascript"],
 	["ts", "text/x-typescript"]
 ])

@@ -42,6 +42,7 @@
                 "text/css": ".css",
                 "text/html": ".html",
                 "application/json": ".json",
+                "application/manifest+json": ".webmanifest",
                 "text/javascript": ".js",
                 "text/typescript": ".ts"
             },
