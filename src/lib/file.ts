@@ -40,7 +40,7 @@ export async function getNewFileHandle() {
 		const handle = await window.showSaveFilePicker({
 			excludeAcceptAllOption: true,
 			suggestedName: "new.txt",
-			types: [...fileTypes.keys()]
+			types: Array.from(fileTypes.keys())
 				.filter((v) => !!fileMimeTypes.get(v))
 				.map((v) => ({
 					accept: {

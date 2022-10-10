@@ -1,8 +1,8 @@
-import monaco, { IQuickInputService } from "./monaco";
+import monaco from "./monaco";
 import { onClose, onOpen, onSave, initDropFile, initLaunchWithFile, onCreate } from "./file";
 import { createNotice } from "./status";
 import { Store } from "./store";
-import { convertToMarkdown, exportToMarkdown } from "./markdown";
+import { exportToMarkdown } from "./languages/markdown";
 
 // Monaco editor doesn't have an API to change default keybindings
 // so we have to tap into internal api to change default keybindings
@@ -39,7 +39,7 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 		tabSize: 4
 	})
 
-	removeDefaultKeybindings();
+	disableBrowserKeybindings();
 
 	addActions(editor, store);
 
@@ -52,15 +52,9 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 	return editor;
 }
 
-export function removeDefaultKeybindings() {
+export function disableBrowserKeybindings() {
 	document.addEventListener("keydown", (e) => {
-		if ((e.ctrlKey || e.metaKey) && e.key === "s") {
-			e.preventDefault();
-		}
-		if ((e.ctrlKey || e.metaKey) && e.key === "o") {
-			e.preventDefault();
-		}
-		if ((e.ctrlKey || e.metaKey) && e.key === "p") {
+		if ((e.ctrlKey || e.metaKey) && ["s", "e", "o", "p"].includes(e.key)) {
 			e.preventDefault();
 		}
 	})
@@ -68,7 +62,6 @@ export function removeDefaultKeybindings() {
 
 function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 	const fileAvailableContext = editor.createContextKey<boolean>("fileAvailable", false);
-	const fileTypeContext = editor.createContextKey<string>("fileType", "");
 
 	initDropFile(document.body, editor, store, fileAvailableContext)
 	initLaunchWithFile(editor, store, fileAvailableContext);
@@ -76,7 +69,7 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 	editor.addAction({
 		id: "miniated.open_file",
 		label: "Open File...",
-		run: () => onOpen(store, editor, fileAvailableContext, fileTypeContext),
+		run: () => onOpen(store, editor, fileAvailableContext),
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyO]
 	})
 	console.log(editor.getModel()?.getLanguageId());
@@ -94,7 +87,7 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 			// The user would rather have to see another popup
 			// then to lose all work on a specific file
 			if (!fileHandle) {
-				onCreate(editor, store, fileAvailableContext, fileTypeContext);
+				onCreate(editor, store, fileAvailableContext);
 			} else {
 				onSave(fileHandle, editor).then(() => 
 					createNotice("Saved!")
