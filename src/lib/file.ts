@@ -119,7 +119,7 @@ export function getExtension(fname: string) {
 	return fname.slice((Math.max(0, fname.lastIndexOf(".")) || Infinity) + 1);
 }
 
-export function initDropFile(element: HTMLElement, editor: monaco.editor.IStandaloneCodeEditor, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>, disableAutosave: () => void) {
+export function initDropFile(element: HTMLElement, editor: monaco.editor.IStandaloneCodeEditor, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>, _disableAutosave: () => void) {
 	async function dropHandler(e: DragEvent) {
 		console.log('File(s) dropped');
 	  
@@ -131,16 +131,16 @@ export function initDropFile(element: HTMLElement, editor: monaco.editor.IStanda
 
 			const fileHandle = fileHandleRaw as FileSystemFileHandle;
 			setEditorText(editor, fileHandle, store, fileAvailableContext);
-			disableAutosave = startAutosave(editor, fileHandle);
+			_disableAutosave = startAutosave(editor, fileHandle);
 		}
 	}
 	
 	element.addEventListener("drop", dropHandler, false);
 }
 
-export function initLaunchWithFile(editor: monaco.editor.IStandaloneCodeEditor, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>, disableAutosave: () => void) {
-	//@ts-ignore
-	window.launchQueue.setConsumer((launchParams) => {
+export function initLaunchWithFile(editor: monaco.editor.IStandaloneCodeEditor, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>, _disableAutosave: () => void) {
+	
+	(window as any).launchQueue.setConsumer((launchParams: any) => {
 		// Nothing to do when the queue is empty.
 		if (!launchParams.files.length) {
 			return;
@@ -149,7 +149,7 @@ export function initLaunchWithFile(editor: monaco.editor.IStandaloneCodeEditor, 
 
 		setEditorText(editor, fileHandle, store, fileAvailableContext)
 
-		disableAutosave = startAutosave(editor, fileHandle)
+		_disableAutosave = startAutosave(editor, fileHandle);
   });
 }
 
