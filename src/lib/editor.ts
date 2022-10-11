@@ -33,6 +33,7 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 		fontLigatures: true,
 		padding: {
 			top: 32,
+			bottom: 16
 		},
 		theme: theme === "dark" ? "vs-dark" : "vs",
 		insertSpaces: false,
@@ -84,6 +85,7 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 			// but it is not stored in store
 			// try to create a new file handle
 			// Do not touch this. It's only a safety precaution
+			//
 			// The user would rather have to see another popup
 			// then to lose all work on a specific file
 			if (!fileHandle) {
@@ -105,6 +107,7 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 	});
 	editor.addAction({
 		id: "miniated.export_markdown",
+		precondition: "fileAvailable",
 		label: "Export Markdown File to HTML...",
 		run: exportToMarkdown,
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyE]
