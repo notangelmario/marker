@@ -38,11 +38,13 @@ jobs:
         run: npm run build
       - name: Check App
         run: npm run check
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@main
         with:
-          name: build-output
-          path: ./dist
+          # Upload entire repository
+          path: './dist'
           
   deploy:
     needs: build
@@ -51,18 +53,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: build-output
-          path: ./dist
-      - name: Setup Pages
-        uses: actions/configure-pages@v2
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          # Upload entire repository
-          path: './dist'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
