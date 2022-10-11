@@ -1,6 +1,20 @@
 import monaco from "./monaco";
+import { createNotice } from "./status";
 import { Store } from "./store";
 
+export function startAutosave(editor: monaco.editor.IStandaloneCodeEditor, fileHandle: FileSystemFileHandle) {
+	const interval = setInterval(() => {
+		const contents = editor.getValue()
+
+		writeFile(fileHandle, contents).then(() => {
+			createNotice("Autosaved!");
+		});
+	}, 30000)
+
+	return () => {
+		clearInterval(interval);
+	}
+}
 
 export async function getFileHandle() {
 	try {
@@ -66,7 +80,11 @@ export async function onCreate(editor: monaco.editor.IStandaloneCodeEditor, stor
 		}
 
 		setEditorText(editor, fileHandle, store, fileAvailableContext);
+
+		return fileHandle;
 	}
+
+	return null;
 }
 
 export async function onSave(fileHandle: FileSystemFileHandle, editor: monaco.editor.IStandaloneCodeEditor) {
@@ -80,8 +98,11 @@ export async function onOpen(store: Store, editor: monaco.editor.IStandaloneCode
 
 	if (fileHandle) {
 		await setEditorText(editor, fileHandle, store, fileAvailableContext);
-		console.log(editor.getModel()?.getLanguageId());
+
+		return fileHandle;
 	}
+
+	return null;
 }
 
 export function onClose(editor: monaco.editor.IStandaloneCodeEditor, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>) {
@@ -94,7 +115,7 @@ export function getExtension(fname: string) {
 	return fname.slice((Math.max(0, fname.lastIndexOf(".")) || Infinity) + 1);
 }
 
-export function initDropFile(element: HTMLElement, editor: monaco.editor.IStandaloneCodeEditor, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>) {
+export function initDropFile(element: HTMLElement, editor: monaco.editor.IStandaloneCodeEditor, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>, disableAutosave: () => void) {
 	async function dropHandler(e: DragEvent) {
 		console.log('File(s) dropped');
 	  
@@ -106,13 +127,14 @@ export function initDropFile(element: HTMLElement, editor: monaco.editor.IStanda
 
 			const fileHandle = fileHandleRaw as FileSystemFileHandle;
 			setEditorText(editor, fileHandle, store, fileAvailableContext);
+			disableAutosave = startAutosave(editor, fileHandle);
 		}
 	}
 	
 	element.addEventListener("drop", dropHandler, false);
 }
 
-export function initLaunchWithFile(editor: monaco.editor.IStandaloneCodeEditor, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>) {
+export function initLaunchWithFile(editor: monaco.editor.IStandaloneCodeEditor, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>, disableAutosave: () => void) {
 	//@ts-ignore
 	window.launchQueue.setConsumer((launchParams) => {
 		// Nothing to do when the queue is empty.
@@ -122,6 +144,8 @@ export function initLaunchWithFile(editor: monaco.editor.IStandaloneCodeEditor, 
 		const fileHandle = launchParams.files[0];
 
 		setEditorText(editor, fileHandle, store, fileAvailableContext)
+
+		disableAutosave = startAutosave(editor, fileHandle)
   });
 }
 

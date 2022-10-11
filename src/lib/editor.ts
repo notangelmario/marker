@@ -1,5 +1,5 @@
 import monaco from "./monaco";
-import { onClose, onOpen, onSave, initDropFile, initLaunchWithFile, onCreate } from "./file";
+import { onClose, onOpen, onSave, initDropFile, initLaunchWithFile, onCreate, startAutosave } from "./file";
 import { createNotice } from "./status";
 import { Store } from "./store";
 
@@ -61,15 +61,20 @@ export function disableBrowserKeybindings() {
 }
 
 function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
+	let disableAutosave: () => void = () => null;
 	const fileAvailableContext = editor.createContextKey<boolean>("fileAvailable", false);
 
-	initDropFile(document.body, editor, store, fileAvailableContext)
-	initLaunchWithFile(editor, store, fileAvailableContext);
+	initDropFile(document.body, editor, store, fileAvailableContext, disableAutosave);
+	initLaunchWithFile(editor, store, fileAvailableContext, disableAutosave);
 
 	editor.addAction({
 		id: "miniated.open_file",
 		label: "Open File...",
-		run: () => onOpen(store, editor, fileAvailableContext),
+		run: async () => {
+			const fileHandle = await onOpen(store, editor, fileAvailableContext);
+			if (!fileHandle) return;
+			disableAutosave = startAutosave(editor, fileHandle);
+		},
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyO]
 	})
 	console.log(editor.getModel()?.getLanguageId());
@@ -101,7 +106,11 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		id: "miniated.create_file",
 		label: "Create New File...",
 		precondition: "!fileAvailable",
-		run: () => onCreate(editor, store, fileAvailableContext),
+		run: async () => {
+			const fileHandle = await onCreate(editor, store, fileAvailableContext);
+			if (!fileHandle) return; 
+			disableAutosave = startAutosave(editor, fileHandle);
+		},
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS]
 	});
 	editor.addAction({
@@ -118,7 +127,10 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		id: "miniated.close_file",
 		label: "Close File",
 		precondition: "fileAvailable",
-		run: () => onClose(editor, store, fileAvailableContext),
+		run: () => {
+			onClose(editor, store, fileAvailableContext)
+			disableAutosave();
+		},
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyQ]
 	});
 	editor.addAction({
