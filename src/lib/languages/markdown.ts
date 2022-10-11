@@ -37,11 +37,7 @@ export async function exportToMarkdown(editor: monaco.editor.IStandaloneCodeEdit
 				const html = `
 					<!DOCTYPE html/>
 					<html>
-						<style>
-							* {
-								font-family: Arial, Helvetica, sans-serif;
-							}
-						</style>
+						<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/pixelbrackets/gfm-stylesheet/dist/gfm.min.css" />
 						<body>
 							${markdownHtml}
 						</body>
