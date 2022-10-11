@@ -1,5 +1,4 @@
 import monaco from "./lib/monaco";
-//@ts-ignore
 import { registerSW } from 'virtual:pwa-register'
 import { initStore } from "./lib/store";
 import { initEditor } from "./lib/editor";

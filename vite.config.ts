@@ -12,6 +12,8 @@ export default defineConfig({
       injectRegister: null,
       registerType: "prompt",
       workbox: {
+        skipWaiting: true,
+        clientsClaim: true,
         cleanupOutdatedCaches: true,
         maximumFileSizeToCacheInBytes: 30000000
       }
