@@ -3,12 +3,15 @@ import { createNotice } from "./status";
 import { Store } from "./store";
 
 export function startAutosave(editor: monaco.editor.IStandaloneCodeEditor, fileHandle: FileSystemFileHandle) {
-	const interval = setInterval(() => {
+	const interval = setInterval(async () => {
 		const contents = editor.getValue()
 
-		writeFile(fileHandle, contents).then(() => {
-			createNotice("Autosaved!");
-		});
+		if (await fileHandle.queryPermission({ mode: "readwrite" }) === "granted") {
+
+			writeFile(fileHandle, contents).then(() => {
+				createNotice("Autosaved!");
+			});
+		};
 	}, 30000)
 
 	return () => {
@@ -88,7 +91,8 @@ export async function onCreate(editor: monaco.editor.IStandaloneCodeEditor, stor
 }
 
 export async function onSave(fileHandle: FileSystemFileHandle, editor: monaco.editor.IStandaloneCodeEditor) {
-	await writeFile(fileHandle, editor.getValue())
+	await writeFile(fileHandle, editor.getValue());
+	createNotice("Saved!");
 }
 
 

@@ -77,7 +77,9 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		},
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyO]
 	})
-	console.log(editor.getModel()?.getLanguageId());
+
+	// console.log(editor.getModel()?.getLanguageId());
+	
 	editor.addAction({
 		id: "miniated.save_file",
 		label: "Save File",
@@ -95,9 +97,7 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 			if (!fileHandle) {
 				onCreate(editor, store, fileAvailableContext);
 			} else {
-				onSave(fileHandle, editor).then(() => 
-					createNotice("Saved!")
-				);
+				onSave(fileHandle, editor);
 			}
 		},
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS]

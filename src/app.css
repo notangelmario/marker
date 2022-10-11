@@ -41,7 +41,7 @@ html, body, #app {
 	border-radius: calc(var(--radius) * 2);
 	padding: 1rem;
 	z-index: 99;
-	transition: opacity 1s ease-in-out;
+	transition: opacity 1s ease-out;
 }
 
 /* Status */
@@ -73,7 +73,7 @@ html, body, #app {
 
 #status-notice {
 	font-size: 12px;
-	transition: opacity 1s ease-in-out;
+	transition: opacity 1s ease-out;
 }
 
 /* Unsupported device or browser notice */
