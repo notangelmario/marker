@@ -2,7 +2,6 @@ import monaco from "./monaco";
 import { onClose, onOpen, onSave, initDropFile, initLaunchWithFile, onCreate } from "./file";
 import { createNotice } from "./status";
 import { Store } from "./store";
-import { exportToMarkdown } from "./languages/markdown";
 
 // Monaco editor doesn't have an API to change default keybindings
 // so we have to tap into internal api to change default keybindings
@@ -55,7 +54,7 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 
 export function disableBrowserKeybindings() {
 	document.addEventListener("keydown", (e) => {
-		if ((e.ctrlKey || e.metaKey) && ["s", "e", "o", "p"].includes(e.key)) {
+		if ((e.ctrlKey || e.metaKey) && ["s", "o", "p"].includes(e.key)) {
 			e.preventDefault();
 		}
 	})
@@ -106,11 +105,14 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS]
 	});
 	editor.addAction({
-		id: "miniated.export_markdown",
+		id: "miniated.export_markdown_html",
 		precondition: "fileAvailable",
 		label: "Export Markdown File to HTML...",
-		run: exportToMarkdown,
-		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyE]
+		run: async () => {
+			const { exportToHtml } = await import("./languages/markdown");
+			
+			exportToHtml(editor);
+		}
 	});
 	editor.addAction({
 		id: "miniated.close_file",

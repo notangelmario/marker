@@ -16,5 +16,15 @@ export default defineConfig({
         maximumFileSizeToCacheInBytes: 30000000
       }
     }),
-  ]
+  ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "monaco-editor": ["monaco-editor"],
+          marked: ["marked"]
+        }
+      }
+    }
+  }
 });

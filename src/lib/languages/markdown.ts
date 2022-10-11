@@ -10,7 +10,7 @@ export async function convertToMarkdown(src: string): Promise<string> {
 	})
 }
 
-export async function exportToMarkdown(editor: monaco.editor.IStandaloneCodeEditor) {
+export async function exportToHtml(editor: monaco.editor.IStandaloneCodeEditor) {
 	if (editor.getModel()?.getLanguageId() !== "markdown") {
 		createNotice("Can't export non-markdown files");
 		return;

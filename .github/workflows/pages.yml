@@ -34,8 +34,10 @@ jobs:
           node-version: 16
       - name: Install modules
         run: npm ci
-      - name: Build app
+      - name: Build App
         run: npm run build
+      - name: Check App
+        run: npm run check
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
