@@ -12,17 +12,17 @@ export function startAutosave(editor: monaco.editor.IStandaloneCodeEditor, fileH
 				createNotice("Autosaved!");
 			});
 		};
-	}, 30000)
+	}, 60000);
 
 	return () => {
 		clearInterval(interval);
 	}
 }
 
-export async function getFileHandle() {
+export async function showOpenFilePicker() {
 	try {
 		const [fileSystemHandle] = await window.showOpenFilePicker({
-			multiple: false
+			multiple: false,
 		});
 
 		return fileSystemHandle
@@ -52,7 +52,7 @@ export async function setEditorText(editor: monaco.editor.IStandaloneCodeEditor,
 	store.set("fileHandle", fileHandle);
 }
 
-export async function getNewFileHandle() {
+export async function showSaveFilePicker() {
 	try {
 		const handle = await window.showSaveFilePicker({
 			excludeAcceptAllOption: true,
@@ -74,7 +74,7 @@ export async function getNewFileHandle() {
 }
 
 export async function onCreate(editor: monaco.editor.IStandaloneCodeEditor, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>) {
-	const fileHandle = await getNewFileHandle()
+	const fileHandle = await showSaveFilePicker();
 
 
 	if (fileHandle) {
@@ -97,7 +97,7 @@ export async function onSave(fileHandle: FileSystemFileHandle, editor: monaco.ed
 
 
 export async function onOpen(store: Store, editor: monaco.editor.IStandaloneCodeEditor, fileAvailableContext: monaco.editor.IContextKey<boolean>) {
-	const fileHandle = await getFileHandle();
+	const fileHandle = await showOpenFilePicker();
 
 
 	if (fileHandle) {
