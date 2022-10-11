@@ -6,14 +6,7 @@ on:
     tags:
       - '*'
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
 
 # Allow one concurrent deployment
 concurrency:
@@ -41,12 +34,15 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Upload artifact
-        uses: actions/upload-github-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v1
         with:
-          # Upload entire repository
           path: './dist'
           
   deploy:
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     needs: build
     environment:
       name: github-pages
