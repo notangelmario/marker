@@ -13,7 +13,7 @@ Miniated is a minimalist web editor based on [Monaco Editor](https://microsoft.g
 
 Miniated has 2 kinds of support for languages:
 * Full support (supports autocomplete, suggestions, etc.)
-* Partial support (only syntax highlighting)
+* Partial support (syntax highlighting only)
 
 #### Full support
 * HTML
