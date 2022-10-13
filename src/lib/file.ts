@@ -12,7 +12,7 @@ export function startAutosave(editor: monaco.editor.IStandaloneCodeEditor, fileH
 				createNotice("Autosaved!");
 			});
 		};
-	}, 60000);
+	}, 120000);
 
 	return () => {
 		clearInterval(interval);
