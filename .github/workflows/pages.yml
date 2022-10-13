@@ -3,10 +3,7 @@ name: Deploy static content to Pages
 
 on:
   push:
-    tags:
-      - '*'
-
-  workflow_dispatch:
+    branches: ["main"]
 
 # Allow one concurrent deployment
 concurrency:
