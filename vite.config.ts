@@ -1,9 +1,12 @@
+import { resolve } from "path";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  appType: "mpa",
+  root: resolve(__dirname, "src"),
   plugins: [
     VitePWA({
       devOptions: {
@@ -20,7 +23,13 @@ export default defineConfig({
     }),
   ],
   build: {
+    outDir: resolve(__dirname, "dist"),
+    emptyOutDir: true,
     rollupOptions: {
+      input: {
+        main: resolve(__dirname, "src", "pages", "index.html"),
+        "markdown-preview": resolve(__dirname, "src", "pages", "markdown-preview.html"),
+      },
       output: {
         manualChunks: {
           "monaco-editor": ["monaco-editor"],

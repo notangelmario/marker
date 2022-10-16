@@ -3,6 +3,31 @@ import { createNotice } from "../status";
 import monaco from "../monaco";
 import { writeFile } from "../file";
 
+export function openPreviewWindow(editor: monaco.editor.IStandaloneCodeEditor) {
+	const preview = window.open("markdown-preview.html", "_blank");
+
+	if (preview) {
+		preview.postMessage(editor.getValue());
+	}
+	
+	return preview;
+}
+
+export function startPreviewWatcher(editor: monaco.editor.IStandaloneCodeEditor, previewWindow: Window) {
+	const interval = setInterval(() => {
+
+		previewWindow.postMessage(editor.getValue())
+	}, 2000);
+
+	return interval;
+}
+
+export function stopPreviewWatcher(previewInterval: number, previewWindow: Window) {
+	clearInterval(previewInterval);
+	previewWindow.close();
+}
+
+
 export async function convertToMarkdown(src: string): Promise<string> {
 	return await marked.parse(src, {
 		async: true,

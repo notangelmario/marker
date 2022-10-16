@@ -35,9 +35,10 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 		},
 		theme: theme === "dark" ? "vs-dark" : "vs",
 		insertSpaces: false,
-		tabSize: 4
+		tabSize: 4,
 	})
 
+	// Disables default browser keybindings
 	disableBrowserKeybindings();
 
 	addActions(editor, store);
@@ -61,6 +62,8 @@ export function disableBrowserKeybindings() {
 
 function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 	let disableAutosave: () => void = () => null;
+	let previewWindow: Window | null = null;
+	let previewWatcher: number | null = null;
 	const fileAvailableContext = editor.createContextKey<boolean>("fileAvailable", false);
 
 	initDropFile(document.body, editor, store, fileAvailableContext, disableAutosave);
@@ -123,6 +126,16 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		}
 	});
 	editor.addAction({
+		id: "miniated.export_markdown_html",
+		precondition: "fileAvailable",
+		label: "Export Markdown File to HTML...",
+		run: async () => {
+			const { exportToHtml } = await import("./languages/markdown");
+			
+			exportToHtml(editor);
+		}
+	});
+	editor.addAction({
 		id: "miniated.close_file",
 		label: "Close File",
 		precondition: "fileAvailable",
@@ -131,6 +144,31 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 			disableAutosave();
 		},
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyQ]
+	});
+	editor.addAction({
+		id: "miniated.open_markdown_preview",
+		label: "Open Markdown Preview",
+		// precondition: "fileAvailable",
+		run: async () => {
+			const { openPreviewWindow, startPreviewWatcher } = await import("./languages/markdown");
+
+			previewWindow = openPreviewWindow(editor);
+			if (previewWindow) {
+				previewWatcher = startPreviewWatcher(editor, previewWindow);
+			}
+		}
+	});
+	editor.addAction({
+		id: "miniated.close_markdown_preview",
+		label: "Close Markdown Preview",
+		// precondition: "fileAvailable",
+		run: async () => {
+			const { stopPreviewWatcher } = await import("./languages/markdown");
+
+			if (previewWatcher && previewWindow) {
+				stopPreviewWatcher(previewWatcher, previewWindow);
+			}
+		}
 	});
 	editor.addAction({
 		id: "miniated.open_repo",
