@@ -9,7 +9,7 @@ import { isCompat } from "./lib/compat";
 
 const editorWrapper = document.getElementById("app")!;
 
-if (isCompat()) {
+if (isCompat) {
 	const store = initStore();
 	initLanguageWorkers();
 	const editor = initEditor(editorWrapper, store);

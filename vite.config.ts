@@ -6,7 +6,6 @@ import { VitePWA } from "vite-plugin-pwa";
 // https://vitejs.dev/config/
 export default defineConfig({
   appType: "mpa",
-  root: resolve(__dirname, "src"),
   plugins: [
     VitePWA({
       devOptions: {
@@ -27,8 +26,8 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, "src", "pages", "index.html"),
-        "markdown-preview": resolve(__dirname, "src", "pages", "markdown-preview.html"),
+        main: resolve(__dirname, "index.html"),
+        "markdown-preview": resolve(__dirname, "markdown-preview.html"),
       },
       output: {
         manualChunks: {

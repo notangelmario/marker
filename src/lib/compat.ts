@@ -1,13 +1,6 @@
 
-export function isCompat() {
-	//@ts-ignore
-	// if (!('launchQueue' in window && 'files' in LaunchParams.prototype)) return false;
-	if (!("showOpenFilePicker" in window)) return false;
-	if (isMobile()) return false;
 
-
-	return true;
-}
+export const isCompat = !isMobile() && ("showOpenFilePicker" in window)
 
 export function isMobile() {
 	let check = false;

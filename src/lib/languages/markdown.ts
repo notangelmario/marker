@@ -3,8 +3,33 @@ import { createNotice } from "../status";
 import monaco from "../monaco";
 import { writeFile } from "../file";
 
+export function addMarkdownActions(editor: monaco.editor.IStandaloneCodeEditor) {
+	editor.addAction({
+		id: "miniated.export_markdown_html",
+		precondition: "fileAvailable",
+		label: "Export Markdown File to HTML...",
+		run: async () => {
+			exportToHtml(editor);
+		}
+	});
+	editor.addAction({
+		id: "miniated.open_markdown_preview",
+		label: "Open Markdown Preview",
+		precondition: "fileAvailable",
+		run: async () => {
+			const previewWindow = openPreviewWindow(editor);
+
+			if (previewWindow) {
+				startPreviewWatcher(editor, previewWindow);
+			} else {
+				createNotice("Could not open preview window.");
+			}
+		}
+	});
+}
+
 export function openPreviewWindow(editor: monaco.editor.IStandaloneCodeEditor) {
-	const preview = window.open("markdown-preview.html", "_blank");
+	const preview = window.open("/markdown-preview.html", "blank", "width=800,height=600");
 
 	if (preview) {
 		preview.postMessage(editor.getValue());
@@ -16,6 +41,13 @@ export function openPreviewWindow(editor: monaco.editor.IStandaloneCodeEditor) {
 export function startPreviewWatcher(editor: monaco.editor.IStandaloneCodeEditor, previewWindow: Window) {
 	const interval = setInterval(() => {
 
+		if (previewWindow.closed) {
+			stopPreviewWatcher(interval, previewWindow);
+			console.log("Stopped watcher!");
+			return;
+		}
+
+		console.log("Working...");
 		previewWindow.postMessage(editor.getValue())
 	}, 2000);
 

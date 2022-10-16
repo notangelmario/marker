@@ -1,6 +1,7 @@
 import monaco from "./monaco";
 import { onClose, onOpen, onSave, initDropFile, initLaunchWithFile, onCreate, startAutosave } from "./file";
 import { Store } from "./store";
+import { addMarkdownActions } from "./languages/markdown";
 
 // Monaco editor doesn't have an API to change default keybindings
 // so we have to tap into internal api to change default keybindings
@@ -62,12 +63,12 @@ export function disableBrowserKeybindings() {
 
 function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 	let disableAutosave: () => void = () => null;
-	let previewWindow: Window | null = null;
-	let previewWatcher: number | null = null;
 	const fileAvailableContext = editor.createContextKey<boolean>("fileAvailable", false);
 
 	initDropFile(document.body, editor, store, fileAvailableContext, disableAutosave);
 	initLaunchWithFile(editor, store, fileAvailableContext, disableAutosave);
+
+	addMarkdownActions(editor);
 
 	editor.addAction({
 		id: "miniated.open_file",
@@ -115,26 +116,7 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		},
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS]
 	});
-	editor.addAction({
-		id: "miniated.export_markdown_html",
-		precondition: "fileAvailable",
-		label: "Export Markdown File to HTML...",
-		run: async () => {
-			const { exportToHtml } = await import("./languages/markdown");
-			
-			exportToHtml(editor);
-		}
-	});
-	editor.addAction({
-		id: "miniated.export_markdown_html",
-		precondition: "fileAvailable",
-		label: "Export Markdown File to HTML...",
-		run: async () => {
-			const { exportToHtml } = await import("./languages/markdown");
-			
-			exportToHtml(editor);
-		}
-	});
+	
 	editor.addAction({
 		id: "miniated.close_file",
 		label: "Close File",
@@ -145,31 +127,7 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		},
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyQ]
 	});
-	editor.addAction({
-		id: "miniated.open_markdown_preview",
-		label: "Open Markdown Preview",
-		// precondition: "fileAvailable",
-		run: async () => {
-			const { openPreviewWindow, startPreviewWatcher } = await import("./languages/markdown");
-
-			previewWindow = openPreviewWindow(editor);
-			if (previewWindow) {
-				previewWatcher = startPreviewWatcher(editor, previewWindow);
-			}
-		}
-	});
-	editor.addAction({
-		id: "miniated.close_markdown_preview",
-		label: "Close Markdown Preview",
-		// precondition: "fileAvailable",
-		run: async () => {
-			const { stopPreviewWatcher } = await import("./languages/markdown");
-
-			if (previewWatcher && previewWindow) {
-				stopPreviewWatcher(previewWatcher, previewWindow);
-			}
-		}
-	});
+	
 	editor.addAction({
 		id: "miniated.open_repo",
 		label: "Show Miniated on GitHub",
