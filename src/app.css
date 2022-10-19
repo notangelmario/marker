@@ -29,7 +29,7 @@ html, body, #app {
 }
 
 /* Modal */
-#miniated-modal {
+#marker-modal {
 	top: 110vh;
 	left: 50%;
 	transform: translate(-50%, -50vh);
@@ -45,7 +45,7 @@ html, body, #app {
 }
 
 /* Status */
-#miniated-status {
+#marker-status {
 	display: flex;
 	flex-flow: row;
 	flex-wrap: nowrap;
@@ -62,7 +62,7 @@ html, body, #app {
 	pointer-events: none;
 }
 
-#miniated-status > .spacer {
+#marker-status > .spacer {
 	flex: 1;
 }
 

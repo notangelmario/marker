@@ -3,11 +3,11 @@ import * as monaco from "monaco-editor";
 
 const statusWidget: monaco.editor.IOverlayWidget = {
 	getId: function () {
-		return 'miniated.status';
+		return 'marker.status';
 	},
 	getDomNode: function () {
 		const domNode = document.createElement('div');
-		domNode.id = "miniated-status"
+		domNode.id = "marker-status"
 		domNode.innerHTML = `
 			<p id="status-notice" style="opacity: 0;"></p>
 			<div class="spacer"></div>

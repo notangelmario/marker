@@ -17,10 +17,10 @@ if (isCompat) {
 
 	registerSW({
 	  onNeedRefresh() {
-	  	createNotice("Miniated will update at the next restart");
+	  	createNotice("Marker will update at the next restart");
 	  },
 	  onOfflineReady() {
-	  	createNotice("Miniated is ready to be used offline");
+	  	createNotice("Marker is ready to be used offline");
 	  },
 	})
 
@@ -37,7 +37,7 @@ if (isCompat) {
 			editor.trigger("ctrl+p", "editor.action.quickCommand", null);
 
 			closeModal(editor);
-			openModal(editor, { autoHide: true, text: "This is the Command Palette! This is how you get around Miniated! Have fun!" })
+			openModal(editor, { autoHide: true, text: "This is the Command Palette! This is how you get around Marker! Have fun!" })
 		}, "!intro-triggered")
 	}
 } else {

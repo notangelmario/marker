@@ -71,7 +71,7 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 	addMarkdownActions(editor);
 
 	editor.addAction({
-		id: "miniated.open_file",
+		id: "marker.open_file",
 		label: "Open File...",
 		run: async () => {
 			const fileHandle = await onOpen(store, editor, fileAvailableContext);
@@ -84,7 +84,7 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 	// console.log(editor.getModel()?.getLanguageId());
 	
 	editor.addAction({
-		id: "miniated.save_file",
+		id: "marker.save_file",
 		label: "Save File",
 		precondition: "fileAvailable",
 		run: () => {
@@ -106,7 +106,7 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS]
 	})
 	editor.addAction({
-		id: "miniated.create_file",
+		id: "marker.create_file",
 		label: "Create New File...",
 		precondition: "!fileAvailable",
 		run: async () => {
@@ -118,7 +118,7 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 	});
 	
 	editor.addAction({
-		id: "miniated.close_file",
+		id: "marker.close_file",
 		label: "Close File",
 		precondition: "fileAvailable",
 		run: () => {
@@ -129,12 +129,12 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 	});
 	
 	editor.addAction({
-		id: "miniated.open_repo",
-		label: "Show Miniated on GitHub",
+		id: "marker.open_repo",
+		label: "Show Marker on GitHub",
 		run: () => {
-			window.open("https://github.com/fructoland/miniated", "_blank", "noopener noreferrer")
+			window.open("https://github.com/fructoland/marker", "_blank", "noopener noreferrer")
 		},
-		contextMenuGroupId: "9_miniated"
+		contextMenuGroupId: "9_marker"
 	});
 	// editorInstance.addAction({
 	// 	id: "editor.change_theme",

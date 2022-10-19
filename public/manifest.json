@@ -1,7 +1,7 @@
 {
-    "name": "Miniated",
-    "short_name": "Miniated",
-    "description": "Miniated is a minimalist web editor based on Monaco Editor.",
+    "name": "Marker",
+    "short_name": "Marker",
+    "description": "Marker is a minimalist web editor based on Monaco Editor.",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",

@@ -1,6 +1,6 @@
-# Miniated
+# Marker
 
-Miniated is a minimalist web editor based on [Monaco Editor](https://microsoft.github.io/monaco-editor/).
+Marker is a minimalist web editor based on [Monaco Editor](https://microsoft.github.io/monaco-editor/).
 
 ## ✨ Features
 
@@ -11,7 +11,7 @@ Miniated is a minimalist web editor based on [Monaco Editor](https://microsoft.g
 
 ## 🌐 Languages
 
-Miniated has 2 kinds of support for languages:
+Marker has 2 kinds of support for languages:
 * Full support (supports autocomplete, suggestions, etc.)
 * Partial support (syntax highlighting only)
 

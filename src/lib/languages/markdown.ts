@@ -5,7 +5,7 @@ import { writeFile } from "../file";
 
 export function addMarkdownActions(editor: monaco.editor.IStandaloneCodeEditor) {
 	editor.addAction({
-		id: "miniated.export_markdown_html",
+		id: "marker.export_markdown_html",
 		precondition: "fileAvailable",
 		label: "Export Markdown File to HTML...",
 		run: async () => {
@@ -13,7 +13,7 @@ export function addMarkdownActions(editor: monaco.editor.IStandaloneCodeEditor) 
 		}
 	});
 	editor.addAction({
-		id: "miniated.open_markdown_preview",
+		id: "marker.open_markdown_preview",
 		label: "Open Markdown Preview",
 		precondition: "fileAvailable",
 		run: async () => {
@@ -32,23 +32,24 @@ export function openPreviewWindow(editor: monaco.editor.IStandaloneCodeEditor) {
 	const preview = window.open("/markdown-preview.html", "blank", "width=800,height=600");
 
 	if (preview) {
-		preview.postMessage(editor.getValue());
+		preview.window.onload = () => {
+			preview.postMessage(editor.getValue());
+		}
 	}
 	
 	return preview;
 }
 
 export function startPreviewWatcher(editor: monaco.editor.IStandaloneCodeEditor, previewWindow: Window) {
+	const dispose = editor.getModel()?.onDidChangeContent(() => {
+		previewWindow.postMessage(editor.getValue())
+	})
+	
 	const interval = setInterval(() => {
-
 		if (previewWindow.closed) {
 			stopPreviewWatcher(interval, previewWindow);
-			console.log("Stopped watcher!");
-			return;
+			dispose?.dispose();
 		}
-
-		console.log("Working...");
-		previewWindow.postMessage(editor.getValue())
 	}, 2000);
 
 	return interval;
