@@ -2,7 +2,7 @@
   "name": "marker",
   "private": true,
   "author": "Savin Angel-Mario (savin@fructo.land)",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "type": "module",
   "scripts": {
     "dev": "vite",

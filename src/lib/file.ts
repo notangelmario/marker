@@ -47,7 +47,7 @@ export async function setEditorText(editor: monaco.editor.IStandaloneCodeEditor,
 
 	monaco.editor.getModels().forEach((model) => model.dispose());
 	editor.setModel(monaco.editor.createModel(await file.text(), fileTypes.get(ext), monaco.Uri.file(file.name)));
-
+	
 	fileAvailableContext.set(true);
 	store.set("fileHandle", fileHandle);
 }
@@ -155,6 +155,8 @@ export function initLaunchWithFile(editor: monaco.editor.IStandaloneCodeEditor, 
 
 export const fileTypes = new Map<string, string>([
 	["txt", "plaintext"],
+	["sh", "shell"],
+	["bash", "shell"],
 	["c", "c"],
 	["cpp", "cpp"],
 	["py", "python"],
@@ -170,6 +172,7 @@ export const fileTypes = new Map<string, string>([
 
 export const fileMimeTypes = new Map<string, string>([
 	["txt", "text/plain"],
+	["sh", "text/x-shellscript"],
 	["c", "text/x-c"],
 	["py", "text/x-python"],
 	["md", "text/markdown"],

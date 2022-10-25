@@ -27,6 +27,7 @@ Marker has 2 kinds of support for languages:
 * C++
 * Python
 * Markdown
+* Shell/Bash scripts
 * More comming soon...
 
 Made with ❤ by [Fructo](https://fructo.land)

@@ -23,6 +23,7 @@ import "monaco-editor/esm/vs/basic-languages/typescript/typescript.contribution"
 import "monaco-editor/esm/vs/basic-languages/markdown/markdown.contribution";
 import "monaco-editor/esm/vs/basic-languages/python/python.contribution";
 import "monaco-editor/esm/vs/basic-languages/cpp/cpp.contribution";
+import "monaco-editor/esm/vs/basic-languages/shell/shell.contribution";
 
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 
