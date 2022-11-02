@@ -15,6 +15,14 @@ if (isCompat) {
 	const editor = initEditor(editorWrapper, store);
 	initStatus(editor);
 
+	window.onbeforeunload = () => {
+		if (editor.getValue() !== "") {
+			return "You have unsaved changes. Are you sure you want to leave?";
+		}
+
+		return;
+	}
+
 	registerSW({
 	  onNeedRefresh() {
 	  	createNotice("Marker will update at the next restart");
