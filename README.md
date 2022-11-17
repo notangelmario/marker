@@ -30,4 +30,4 @@ Marker has 2 kinds of support for languages:
 * Shell/Bash scripts
 * More comming soon...
 
-Made with ❤ by [Fructo](https://fructo.land)
+Made with ❤ by [Fructoland](https://fructo.land)
