@@ -29,5 +29,3 @@ Marker has 2 kinds of support for languages:
 * Markdown
 * Shell/Bash scripts
 * More comming soon...
-
-Made with ❤ by [Fructoland](https://fructo.land)

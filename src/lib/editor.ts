@@ -132,7 +132,7 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		id: "marker.open_repo",
 		label: "Show Marker on GitHub",
 		run: () => {
-			window.open("https://github.com/fructoland/marker", "_blank", "noopener noreferrer")
+			window.open("https://github.com/notangelmario/marker", "_blank", "noopener noreferrer")
 		},
 		contextMenuGroupId: "9_marker"
 	});
