@@ -2,7 +2,7 @@
   "name": "marker",
   "private": true,
   "author": "Savin Angel-Mario (savin@angelmario.eu)",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "type": "module",
   "scripts": {
     "dev": "vite",

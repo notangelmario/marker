@@ -47,8 +47,11 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 	// Rebind command palette to CTRL+P
 	// To make things easier for Chromebook users
 	updateKeyBinding(editor, "editor.action.quickCommand", monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyP);
-	
-	editor.focus();
+
+	// Hacky fix to autofocus
+	setTimeout(() => {
+		editor.focus();
+	}, 100);
 
 	return editor;
 }
