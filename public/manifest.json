@@ -2,6 +2,7 @@
     "name": "Marker",
     "short_name": "Marker",
     "description": "Marker is a minimalist web editor based on Monaco Editor.",
+		"categories": ["utilities", "productivity"],
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
