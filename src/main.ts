@@ -3,7 +3,7 @@ import { registerSW } from 'virtual:pwa-register'
 import { initStore } from "./lib/store";
 import { initEditor } from "./lib/editor";
 import { closeModal, openModal } from "./lib/modal";
-import { initLanguageWorkers } from "./lib/languages";
+import { initAutoTypings, initLanguageWorkers } from "./lib/languages";
 import { createNotice, initStatus } from "./lib/status";
 import { isCompat } from "./lib/compat";
 
@@ -14,6 +14,7 @@ if (isCompat) {
 	initLanguageWorkers();
 	const editor = initEditor(editorWrapper, store);
 	initStatus(editor);
+	initAutoTypings(editor);
 
 	window.onbeforeunload = () => {
 		if (editor.getValue() !== "") {

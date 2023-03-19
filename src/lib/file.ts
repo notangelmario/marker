@@ -46,8 +46,8 @@ export async function setEditorText(editor: monaco.editor.IStandaloneCodeEditor,
 	const ext = getExtension(file.name);
 
 	monaco.editor.getModels().forEach((model) => model.dispose());
-	editor.setModel(monaco.editor.createModel(await file.text(), fileTypes.get(ext), monaco.Uri.file(file.name)));
-	
+	editor.setModel(monaco.editor.createModel(await file.text(), fileTypes.get(ext)/*, monaco.Uri.file(file.name)*/));
+
 	setTimeout(() => {
 		editor.focus();
 	}, 100);

@@ -9,6 +9,8 @@ import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker'
 //@ts-ignore
 import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 
+export { initAutoTypings } from "./typescript";
+
 // MonacoEnvironment should be initialized before the editor
 export function initLanguageWorkers() {
 	self.MonacoEnvironment = {

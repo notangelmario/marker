@@ -21,6 +21,11 @@ export default defineConfig({
       }
     }),
   ],
+  resolve: {
+	alias: {
+	  path: "path-browserify"
+	}
+  },
   build: {
     outDir: resolve(__dirname, "dist"),
     emptyOutDir: true,
