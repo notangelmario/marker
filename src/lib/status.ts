@@ -9,6 +9,7 @@ const statusWidget: monaco.editor.IOverlayWidget = {
 		const domNode = document.createElement('div');
 		domNode.id = "marker-status"
 		domNode.innerHTML = `
+			<p id="vim-mode-display"></p>
 			<p id="status-notice" style="opacity: 0;"></p>
 			<div class="spacer"></div>
 			<p

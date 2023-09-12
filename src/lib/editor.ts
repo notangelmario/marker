@@ -1,10 +1,14 @@
 import monaco from "./monaco";
+import { initVimMode } from "monaco-vim";
 import { onClose, onOpen, onSave, initDropFile, initLaunchWithFile, onCreate, startAutosave } from "./file";
 import { Store } from "./store";
 import { addMarkdownActions } from "./languages/markdown";
+import { addVimActions } from "./vim";
+import { createNotice } from "./status";
 
 // Monaco editor doesn't have an API to change default keybindings
 // so we have to tap into internal api to change default keybindings
+// This is a hacky solution and will probably break in the future
 export const updateKeyBinding = (editor: monaco.editor.IStandaloneCodeEditor, id: string, newKeyBinding: number) => {
 	const action = editor.getAction(id);
 
@@ -72,6 +76,29 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 	initLaunchWithFile(editor, store, fileAvailableContext, disableAutosave);
 
 	addMarkdownActions(editor);
+
+
+	addVimActions(editor, store, fileAvailableContext);
+	editor.addAction({
+		id: "editor.toggle_vim_mode",
+		label: "Toggle Vim Mode",
+		run: () => {
+			const vimMode = store.get("vimMode");
+
+			if (!vimMode) {
+				const newVimMode = initVimMode(editor, document.getElementById("vim-mode-display")!);
+
+				createNotice("Vim Mode Enabled, use :p to open command palette");
+
+				store.set("vimMode", newVimMode);
+			} else {
+				// @ts-ignore: monaco-vim doesn't have types and I'm too lazy to write them
+				vimMode.dispose();
+
+				store.set("vimMode", null);
+			}
+		},
+	})
 
 	editor.addAction({
 		id: "marker.open_file",
