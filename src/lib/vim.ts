@@ -21,6 +21,9 @@ export function addVimActions(editor: monaco.editor.IStandaloneCodeEditor, store
 		}
 	});
 
+	// This allows the vim extension to trigger the Command Palette
+	// Since Ctrl-P is disabled in Vim mode
+	// TODO: Fix this and create an exception for Ctrl-P Shortcut
 	VimMode.Vim.defineEx('palette', 'p', function() {
 		editor.trigger('keyboard', 'editor.action.quickCommand', null);
 	});
