@@ -8,6 +8,7 @@ Marker is a minimalist web editor based on [Monaco Editor](https://microsoft.git
 * Good for casual users, good for power users
 * Best default settings
 * Easy to learn keyboard shortcuts
+* Supported on Linux, MacOS and Windows
 
 ## 🌐 Languages
 

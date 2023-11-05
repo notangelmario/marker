@@ -75,19 +75,3 @@ html, body, #app {
 	font-size: 12px;
 	transition: opacity 1s ease-out;
 }
-
-/* Unsupported device or browser notice */
-#unsupported {
-	font-family: "Fira Code";
-	height: 100%;
-	color: var(--vscode-editor-foreground);
-}
-
-#unsupported > div {
-	display: flex;
-	flex-flow: column;
-	justify-content: center;
-	align-items: center;
-	text-align: center;
-	height: 100%;
-}
