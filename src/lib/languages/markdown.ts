@@ -1,7 +1,9 @@
 import { marked } from "marked";
 import { createNotice } from "../status";
 import monaco from "../monaco";
-import { writeFile } from "../file";
+import { writeTextFile } from "@tauri-apps/api/fs";
+import { save as saveFile } from "@tauri-apps/api/dialog";
+import { WebviewWindow } from "@tauri-apps/api/window";
 
 export function addMarkdownActions(editor: monaco.editor.IStandaloneCodeEditor) {
 	editor.addAction({
@@ -29,34 +31,31 @@ export function addMarkdownActions(editor: monaco.editor.IStandaloneCodeEditor) 
 }
 
 export function openPreviewWindow(editor: monaco.editor.IStandaloneCodeEditor) {
-	const preview = window.open("/markdown-preview.html", "blank", "width=800,height=600");
+	const previewWindow = new WebviewWindow("markdownPreview", {
+		width: 1024,
+		height: 600,
+		url: "markdown-preview.html",
+	})
 
-	if (preview) {
-		preview.window.onload = () => {
-			preview.postMessage(editor.getValue());
-		}
-	}
-	
-	return preview;
-}
-
-export function startPreviewWatcher(editor: monaco.editor.IStandaloneCodeEditor, previewWindow: Window) {
-	const dispose = editor.getModel()?.onDidChangeContent(() => {
-		previewWindow.postMessage(editor.getValue())
+	previewWindow.once("loaded", () => {
+		previewWindow.emit("load-content", editor.getValue());
 	})
 	
-	const interval = setInterval(() => {
-		if (previewWindow.closed) {
-			stopPreviewWatcher(interval, previewWindow);
-			dispose?.dispose();
-		}
-	}, 2000);
-
-	return interval;
+	return previewWindow;
 }
 
-export function stopPreviewWatcher(previewInterval: number, previewWindow: Window) {
-	clearInterval(previewInterval);
+export function startPreviewWatcher(editor: monaco.editor.IStandaloneCodeEditor, previewWindow: WebviewWindow) {
+	const dispose = editor.getModel()?.onDidChangeContent(() => {
+		previewWindow.emit("load-content", editor.getValue());
+	})
+	
+	previewWindow.onCloseRequested(() => {
+		stopPreviewWatcher(previewWindow),
+		dispose?.dispose();
+	})
+}
+
+export function stopPreviewWatcher(previewWindow: WebviewWindow) {
 	previewWindow.close();
 }
 
@@ -74,20 +73,15 @@ export async function exportToHtml(editor: monaco.editor.IStandaloneCodeEditor) 
 		return;
 	}
 
-	const fileHandle = await window.showSaveFilePicker({
-		excludeAcceptAllOption: true,
-		suggestedName: "markdown-export.html",
-		types: [
-			{
-				accept: {
-					"text/html": ".html"
-				}
-			}
-		]
+	const filePath = await saveFile({
+		filters: [{
+			name: "Markdown",
+			extensions: ["md"]
+		}]
 	});
 
 
-	if (fileHandle) {
+	if (filePath) {
 		if (editor.getValue()) {
 			try {
 				const markdownHtml = await convertToMarkdown(editor.getValue());
@@ -103,7 +97,7 @@ export async function exportToHtml(editor: monaco.editor.IStandaloneCodeEditor) 
 				`
 
 
-				await writeFile(fileHandle, html);
+				await writeTextFile(filePath, html);
 				createNotice("Succesfully exported to HTML!");
 			} catch (e) {
 				createNotice("Something went wrong");

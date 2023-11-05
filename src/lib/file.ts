@@ -1,17 +1,17 @@
 import monaco from "./monaco";
 import { createNotice } from "./status";
 import { Store } from "./store";
+import { open as openFile, save as saveFile } from "@tauri-apps/api/dialog";
+import { readTextFile, writeTextFile } from "@tauri-apps/api/fs";
+import { listen } from "@tauri-apps/api/event";
 
-export function startAutosave(editor: monaco.editor.IStandaloneCodeEditor, fileHandle: FileSystemFileHandle) {
+export function startAutosave(editor: monaco.editor.IStandaloneCodeEditor, filePath: string) {
 	const interval = setInterval(async () => {
 		const contents = editor.getValue()
 
-		if (await fileHandle.queryPermission({ mode: "readwrite" }) === "granted") {
-
-			writeFile(fileHandle, contents).then(() => {
-				createNotice("Autosaved!");
-			});
-		};
+		writeTextFile(filePath, contents).then(() => {
+			createNotice("Autosaved!");
+		});
 	}, 120000);
 
 	return () => {
@@ -21,56 +21,60 @@ export function startAutosave(editor: monaco.editor.IStandaloneCodeEditor, fileH
 
 export async function showOpenFilePicker() {
 	try {
-		const [fileSystemHandle] = await window.showOpenFilePicker({
+		const selected = await openFile({
 			multiple: false,
-		});
+			directory: false,
+			filters: [{
+				name: "Markdown",
+				extensions: ["md"]
+			}]
+		})
 
-		return fileSystemHandle
+		return selected as string
 	} catch {
 		return null
 	}
 }
 
-export async function writeFile(fileHandle: FileSystemFileHandle, contents: string) {
-	const writable = await fileHandle.createWritable();
-	await writable.write({
-		data: contents,
-		type: "write"
-	});
-	await writable.close();
+export async function initDropFileListener(editor: monaco.editor.IStandaloneCodeEditor, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>) {
+	listen("tauri://file-drop", (event) => {
+		const filePath = (event.payload as string[])[0];
+
+		console.log(event);
+
+		if (filePath) {
+			setEditorText(editor, filePath, store, fileAvailableContext);
+		}
+	})
+
 }
 
-export async function setEditorText(editor: monaco.editor.IStandaloneCodeEditor, fileHandle: FileSystemFileHandle, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>) {
-	const file = await fileHandle.getFile();
+export async function setEditorText(editor: monaco.editor.IStandaloneCodeEditor, filePath: string, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>) {
+	const fileContents = await readTextFile(filePath);
 
-	const ext = getExtension(file.name);
+	const ext = getExtension(filePath);
 
 	monaco.editor.getModels().forEach((model) => model.dispose());
-	editor.setModel(monaco.editor.createModel(await file.text(), fileTypes.get(ext)/*, monaco.Uri.file(file.name)*/));
+	editor.setModel(monaco.editor.createModel(fileContents, fileTypes.get(ext)/*, monaco.Uri.file(file.name)*/));
 
 	setTimeout(() => {
 		editor.focus();
 	}, 100);
 
 	fileAvailableContext.set(true);
-	store.set("fileHandle", fileHandle);
+	store.set("filePath", filePath);
 }
 
 export async function showSaveFilePicker() {
 	try {
-		const handle = await window.showSaveFilePicker({
-			excludeAcceptAllOption: true,
-			suggestedName: "new.txt",
-			types: Array.from(fileTypes.keys())
-				.filter((v) => !!fileMimeTypes.get(v))
-				.map((v) => ({
-					accept: {
-    					[fileMimeTypes.get(v)!]: "." + v
-    				}
-				}))
-		});
-		
-		return handle;
+		const selected = await saveFile({
+			filters: [{
+				name: "Markdown",
+				extensions: ["md"]
+			}]
+		})
+
+		return selected as string
 	} catch {
 		return null
 	}
@@ -78,36 +82,36 @@ export async function showSaveFilePicker() {
 }
 
 export async function onCreate(editor: monaco.editor.IStandaloneCodeEditor, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>) {
-	const fileHandle = await showSaveFilePicker();
+	const filePath = await showSaveFilePicker();
 
 
-	if (fileHandle) {
+	if (filePath) {
 		if (editor.getValue()) {
-			await writeFile(fileHandle, editor.getValue());
+			await writeTextFile(filePath, editor.getValue());
 		}
 
-		setEditorText(editor, fileHandle, store, fileAvailableContext);
+		setEditorText(editor, filePath, store, fileAvailableContext);
 
-		return fileHandle;
+		return filePath;
 	}
 
 	return null;
 }
 
-export async function onSave(fileHandle: FileSystemFileHandle, editor: monaco.editor.IStandaloneCodeEditor) {
-	await writeFile(fileHandle, editor.getValue());
+export async function onSave(filePath: string, editor: monaco.editor.IStandaloneCodeEditor) {
+	await writeTextFile(filePath, editor.getValue());
 	createNotice("Saved!");
 }
 
 
 export async function onOpen(store: Store, editor: monaco.editor.IStandaloneCodeEditor, fileAvailableContext: monaco.editor.IContextKey<boolean>) {
-	const fileHandle = await showOpenFilePicker();
+	const filePath = await showOpenFilePicker();
 
 
-	if (fileHandle) {
-		await setEditorText(editor, fileHandle, store, fileAvailableContext);
+	if (filePath) {
+		await setEditorText(editor, filePath, store, fileAvailableContext);
 
-		return fileHandle;
+		return filePath;
 	}
 
 	return null;
@@ -121,40 +125,6 @@ export function onClose(editor: monaco.editor.IStandaloneCodeEditor, store: Stor
 
 export function getExtension(fname: string) {
 	return fname.slice((Math.max(0, fname.lastIndexOf(".")) || Infinity) + 1);
-}
-
-export function initDropFile(element: HTMLElement, editor: monaco.editor.IStandaloneCodeEditor, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>, _disableAutosave: () => void) {
-	async function dropHandler(e: DragEvent) {
-		console.log('File(s) dropped');
-	  
-		e.preventDefault();
-		
-		if (e.dataTransfer?.items) {
-			const fileHandleRaw = await Array.from(e.dataTransfer.items)[0].getAsFileSystemHandle()
-			if (fileHandleRaw?.kind !== "file") return;
-
-			const fileHandle = fileHandleRaw as FileSystemFileHandle;
-			setEditorText(editor, fileHandle, store, fileAvailableContext);
-			_disableAutosave = startAutosave(editor, fileHandle);
-		}
-	}
-	
-	element.addEventListener("drop", dropHandler, false);
-}
-
-export function initLaunchWithFile(editor: monaco.editor.IStandaloneCodeEditor, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>, _disableAutosave: () => void) {
-	
-	(window as any).launchQueue.setConsumer((launchParams: any) => {
-		// Nothing to do when the queue is empty.
-		if (!launchParams.files.length) {
-			return;
-		}
-		const fileHandle = launchParams.files[0];
-
-		setEditorText(editor, fileHandle, store, fileAvailableContext)
-
-		_disableAutosave = startAutosave(editor, fileHandle);
-  });
 }
 
 export const fileTypes = new Map<string, string>([

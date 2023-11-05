@@ -1,16 +1,17 @@
 import { convertToMarkdown } from "./lib/languages/markdown";
+import { emit, listen } from "@tauri-apps/api/event";
 
 const mainWrapper = document.querySelector("main")!;
-const origin = window.location.origin;
 let currentEditorValue = "";
 
+emit("loaded", true)
 
-window.addEventListener("message", async ev => {
-	if (ev.origin !== origin) return;
-	if (ev.data === currentEditorValue) return;
+listen("load-content", async (ev) => {
+	const payload = ev.payload as string;
+	if (ev.payload === currentEditorValue) return;
 
-	currentEditorValue = ev.data;
+	currentEditorValue = payload;
 
-	const markdown = await convertToMarkdown(ev.data);
+	const markdown = await convertToMarkdown(payload);
 	mainWrapper.innerHTML = markdown;
 })

@@ -1,6 +1,6 @@
 import monaco from "./monaco";
 import { initVimMode } from "monaco-vim";
-import { onClose, onOpen, onSave, initDropFile, initLaunchWithFile, onCreate, startAutosave } from "./file";
+import { onClose, onOpen, onSave, onCreate, startAutosave, initDropFileListener } from "./file";
 import { Store } from "./store";
 import { addMarkdownActions } from "./languages/markdown";
 import { addVimActions } from "./vim";
@@ -72,12 +72,9 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 	let disableAutosave: () => void = () => null;
 	const fileAvailableContext = editor.createContextKey<boolean>("fileAvailable", false);
 
-	initDropFile(document.body, editor, store, fileAvailableContext, disableAutosave);
-	initLaunchWithFile(editor, store, fileAvailableContext, disableAutosave);
-
 	addMarkdownActions(editor);
 
-
+	initDropFileListener(editor, store, fileAvailableContext);
 	addVimActions(editor, store, fileAvailableContext);
 	editor.addAction({
 		id: "editor.toggle_vim_mode",
@@ -104,9 +101,9 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		id: "marker.open_file",
 		label: "Open File...",
 		run: async () => {
-			const fileHandle = await onOpen(store, editor, fileAvailableContext);
-			if (!fileHandle) return;
-			disableAutosave = startAutosave(editor, fileHandle);
+			const filePath = await onOpen(store, editor, fileAvailableContext);
+			if (!filePath) return;
+			disableAutosave = startAutosave(editor, filePath);
 		},
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyO]
 	})
@@ -118,7 +115,7 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		label: "Save File",
 		precondition: "fileAvailable",
 		run: () => {
-			const fileHandle = store.get<FileSystemFileHandle>("fileHandle");
+			const filePath = store.get<string>("filePath");
 
 			// In case fileAvaiableContext is true
 			// but it is not stored in store
@@ -127,10 +124,10 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 			//
 			// The user would rather have to see another popup
 			// then to lose all work on a specific file
-			if (!fileHandle) {
+			if (!filePath) {
 				onCreate(editor, store, fileAvailableContext);
 			} else {
-				onSave(fileHandle, editor);
+				onSave(filePath, editor);
 			}
 		},
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS]
@@ -140,9 +137,9 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		label: "Create New File...",
 		precondition: "!fileAvailable",
 		run: async () => {
-			const fileHandle = await onCreate(editor, store, fileAvailableContext);
-			if (!fileHandle) return; 
-			disableAutosave = startAutosave(editor, fileHandle);
+			const filePath = await onCreate(editor, store, fileAvailableContext);
+			if (!filePath) return; 
+			disableAutosave = startAutosave(editor, filePath);
 		},
 		keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS]
 	});

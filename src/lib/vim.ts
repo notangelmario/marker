@@ -5,7 +5,7 @@ import { Store } from "./store";
 
 export function addVimActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store, fileAvailableContext: monaco.editor.IContextKey<boolean>) {
 	VimMode.Vim.defineEx('write', 'w', function() {
-		const fileHandle = store.get<FileSystemFileHandle>("fileHandle");
+		const filePath = store.get<string>("filePath");
 
 		// In case fileAvaiableContext is true
 		// but it is not stored in store
@@ -14,10 +14,10 @@ export function addVimActions(editor: monaco.editor.IStandaloneCodeEditor, store
 		//
 		// The user would rather have to see another popup
 		// then to lose all work on a specific file
-		if (!fileHandle) {
+		if (!filePath) {
 			onCreate(editor, store, fileAvailableContext);
 		} else {
-			onSave(fileHandle, editor);
+			onSave(filePath, editor);
 		}
 	});
 
