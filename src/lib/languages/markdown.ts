@@ -3,7 +3,7 @@ import { createNotice } from "../status";
 import monaco from "../monaco";
 import { writeTextFile } from "@tauri-apps/api/fs";
 import { save as saveFile } from "@tauri-apps/api/dialog";
-import { WebviewWindow } from "@tauri-apps/api/window";
+import { appWindow, WebviewWindow } from "@tauri-apps/api/window";
 
 export function addMarkdownActions(editor: monaco.editor.IStandaloneCodeEditor) {
 	editor.addAction({
@@ -48,9 +48,14 @@ export function startPreviewWatcher(editor: monaco.editor.IStandaloneCodeEditor,
 	const dispose = editor.getModel()?.onDidChangeContent(() => {
 		previewWindow.emit("load-content", editor.getValue());
 	})
+
+	appWindow.onCloseRequested(() => {
+		stopPreviewWatcher(previewWindow);
+		dispose?.dispose();
+	})
 	
 	previewWindow.onCloseRequested(() => {
-		stopPreviewWatcher(previewWindow),
+		stopPreviewWatcher(previewWindow);
 		dispose?.dispose();
 	})
 }

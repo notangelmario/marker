@@ -21,6 +21,9 @@
 	  },
 	  "window": {
 		"all": true
+	  },
+	  "shell": {
+		"all": true
 	  }
     },
     "bundle": {

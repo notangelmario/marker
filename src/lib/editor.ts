@@ -3,6 +3,7 @@ import { initVimMode } from "monaco-vim";
 import { onClose, onOpen, onSave, onCreate, startAutosave, initDropFileListener } from "./file";
 import { Store } from "./store";
 import { addMarkdownActions } from "./languages/markdown";
+import { open } from "@tauri-apps/api/shell";
 import { addVimActions } from "./vim";
 import { createNotice } from "./status";
 
@@ -32,7 +33,7 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 		minimap: {
 			autohide: true,
 		},
-		fontFamily: "Fira Code",
+		fontFamily: "'Fira Code', sans-serif",
 		fontLigatures: true,
 		padding: {
 			top: 32,
@@ -159,7 +160,7 @@ function addActions(editor: monaco.editor.IStandaloneCodeEditor, store: Store) {
 		id: "marker.open_repo",
 		label: "Show Marker on GitHub",
 		run: () => {
-			window.open("https://github.com/notangelmario/marker", "_blank", "noopener noreferrer")
+			open("https://github.com/notangelmario/marker")
 		},
 		contextMenuGroupId: "9_marker"
 	});
