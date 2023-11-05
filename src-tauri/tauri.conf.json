@@ -4,11 +4,11 @@
     "beforeBuildCommand": "bun run build",
     "beforeDevCommand": "bun dev",
     "devPath": "http://localhost:5173",
-    "distDir": "src"
+    "distDir": "../dist"
   },
   "package": {
     "productName": "Marker",
-    "version": "0.1.0"
+    "version": "1.5.0"
   },
   "tauri": {
     "allowlist": {
