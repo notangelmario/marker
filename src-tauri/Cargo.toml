@@ -1,11 +1,11 @@
 [package]
-name = "app"
-version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+name = "marker"
+version = "0.1.5"
+description = "Marker is a minimalist web editor based on Monaco Editor"
+authors = ["Savin Angel-Mario"]
 license = ""
 repository = ""
-default-run = "app"
+default-run = "marker"
 edition = "2021"
 rust-version = "1.60"
 
