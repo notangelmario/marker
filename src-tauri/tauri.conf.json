@@ -24,6 +24,9 @@
 	  },
 	  "shell": {
 		"all": true
+	  },
+	  "os": {
+		"all": true
 	  }
     },
     "bundle": {
@@ -67,6 +70,7 @@
     },
     "windows": [
       {
+		"decorations": false,
         "fullscreen": false,
         "height": 600,
         "resizable": true,

@@ -29,6 +29,7 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 
 	const editor = monaco.editor.create(editorWrapper, {
 		smoothScrolling: true,
+		dragAndDrop: true,
 		automaticLayout: true,
 		minimap: {
 			autohide: true,
@@ -36,7 +37,7 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 		fontFamily: "'Fira Code', sans-serif",
 		fontLigatures: true,
 		padding: {
-			top: 32,
+			top: 64,
 			bottom: 16
 		},
 		theme: theme === "dark" ? "vs-dark" : "vs",

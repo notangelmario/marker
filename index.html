@@ -16,21 +16,8 @@
 		<meta name="description" content="Marker is a minimalist web editor based on Monaco Editor."/>
 	</head>
 	<body>
+		<div data-tauri-drag-region class="titlebar" id="titlebar"></div>
 		<div id="app"></div>
-		
-		<div 
-			id="unsupported"
-			style="display: none"
-		>
-			<div>
-				<h1>
-					Your device is unsupported
-				</h1>
-				<p>
-					Try opening this app on a different device or a different browser
-				</p>
-			</div>
-		</div>
 		<script type="module" src="./src/main.ts"></script>
 	</body>
 </html>

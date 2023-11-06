@@ -75,3 +75,47 @@ html, body, #app {
 	font-size: 12px;
 	transition: opacity 1s ease-out;
 }
+
+.titlebar {
+	height: 30px;
+	background: var(--light);
+	user-select: none;
+	display: flex;
+	justify-content: flex-end;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 9999;
+}
+
+.titlebar.titlebar-macos {
+	justify-content: flex-start;
+}
+
+.titlebar-button {
+	background: var(--light);
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	width: 30px;
+	height: 30px;
+}
+
+.titlebar-button:hover {
+	filter: brightness(75%);
+}
+
+@media (prefers-color-scheme: dark) {
+	.titlebar, .titlebar-button {
+		background: var(--dark);
+	}
+
+	.titlebar-button > img {
+		filter: invert(100%);
+	}
+
+	.titlebar-button:hover {
+		filter: brightness(125%);
+	}
+}

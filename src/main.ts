@@ -4,7 +4,9 @@ import { initEditor } from "./lib/editor";
 import { closeModal, openModal } from "./lib/modal";
 import { initAutoTypings, initLanguageWorkers } from "./lib/languages";
 import { initStatus } from "./lib/status";
+import { initWindowButtons, initWindowTitlebar } from "./lib/window";
 
+initWindowTitlebar().then(() => initWindowButtons());
 const editorWrapper = document.getElementById("app")!;
 
 const store = initStore();
