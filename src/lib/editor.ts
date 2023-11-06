@@ -37,7 +37,7 @@ export function initEditor(editorWrapper: HTMLElement, store: Store) {
 		fontFamily: "'Fira Code', sans-serif",
 		fontLigatures: true,
 		padding: {
-			top: 64,
+			top: 32,
 			bottom: 16
 		},
 		theme: theme === "dark" ? "vs-dark" : "vs",

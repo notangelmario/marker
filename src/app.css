@@ -16,6 +16,11 @@ html, body, #app {
 	background-color: var(--light);
 }
 
+#app {
+	height: calc(100% - 30px);
+	padding-top: 30px;
+}
+
 @media (prefers-color-scheme:  dark) {
 	html, body, #app {
 		background-color: var(--dark);
