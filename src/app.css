@@ -45,19 +45,21 @@ html, body, #app {
 	box-shadow: 0 0 10px 1px var(--vscode-widget-shadow);
 	border-radius: calc(var(--radius) * 2);
 	padding: 1rem;
-	z-index: 99;
+	z-index: 9999;
 	transition: opacity 1s ease-out;
 }
 
 /* Status */
 #marker-status {
+	position: fixed!important;
 	display: flex;
 	flex-flow: row;
 	flex-wrap: nowrap;
 	align-items: center;
-	z-index: 99;
+	z-index: 9999;
 	padding: 0 16px;
 	top: calc(100vh - 24px);
+	right: 0;
 	bottom: 0;
 	left: 0;
 	width: 100%;
