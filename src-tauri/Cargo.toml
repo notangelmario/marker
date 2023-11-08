@@ -1,6 +1,6 @@
 [package]
 name = "marker"
-version = "1.5.0"
+version = "1.5.1"
 description = "Marker is a minimalist web editor based on Monaco Editor"
 authors = ["Savin Angel-Mario"]
 license = ""
