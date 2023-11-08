@@ -68,10 +68,52 @@ export async function setEditorText(editor: monaco.editor.IStandaloneCodeEditor,
 export async function showSaveFilePicker() {
 	try {
 		const selected = await saveFile({
-			filters: [{
-				name: "Markdown",
-				extensions: ["md"]
-			}]
+			filters: [
+				{
+					name: "Markdown",
+					extensions: ["md"]
+				},
+				{
+					name: "Text",
+					extensions: ["txt"]
+				},
+				{
+					name: "Shell Script",
+					extensions: ["sh"]
+				},
+				{
+					name: "C",
+					extensions: ["c"]
+				},
+				{
+					name: "C++",
+					extensions: ["cpp"]
+				},
+				{
+					name: "Python",
+					extensions: ["py"]
+				},
+				{
+					name: "CSS",
+					extensions: ["css"]
+				},
+				{
+					name: "HTML",
+					extensions: ["html"]
+				},
+				{
+					name: "JSON",
+					extensions: ["json"]
+				},
+				{
+					name: "JavaScript",
+					extensions: ["js"]
+				},
+				{
+					name: "TypeScript",
+					extensions: ["ts"]
+				}
+			]
 		})
 
 		return selected as string
@@ -142,18 +184,4 @@ export const fileTypes = new Map<string, string>([
 	["js", "javascript"],
 	["mjs", "javascript"],
 	["ts", "typescript"]
-])
-
-export const fileMimeTypes = new Map<string, string>([
-	["txt", "text/plain"],
-	["sh", "text/x-shellscript"],
-	["c", "text/x-c"],
-	["py", "text/x-python"],
-	["md", "text/markdown"],
-	["css", "text/css"],
-	["html", "text/html"],
-	["json", "application/json"],
-	["webmanifest", "application/manifest+json"],
-	["js", "text/javascript"],
-	["ts", "text/x-typescript"]
 ])
