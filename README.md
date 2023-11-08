@@ -30,3 +30,5 @@ Marker has 2 kinds of support for languages:
 * Markdown
 * Shell/Bash scripts
 * More comming soon...
+
+> You can also force open a file by dragging and dropping
