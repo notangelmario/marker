@@ -24,10 +24,7 @@ export async function showOpenFilePicker() {
 		const selected = await openFile({
 			multiple: false,
 			directory: false,
-			filters: [{
-				name: "Markdown",
-				extensions: ["md"]
-			}]
+			filters: pickerFilters
 		})
 
 		return selected as string
@@ -68,52 +65,7 @@ export async function setEditorText(editor: monaco.editor.IStandaloneCodeEditor,
 export async function showSaveFilePicker() {
 	try {
 		const selected = await saveFile({
-			filters: [
-				{
-					name: "Markdown",
-					extensions: ["md"]
-				},
-				{
-					name: "Text",
-					extensions: ["txt"]
-				},
-				{
-					name: "Shell Script",
-					extensions: ["sh"]
-				},
-				{
-					name: "C",
-					extensions: ["c"]
-				},
-				{
-					name: "C++",
-					extensions: ["cpp"]
-				},
-				{
-					name: "Python",
-					extensions: ["py"]
-				},
-				{
-					name: "CSS",
-					extensions: ["css"]
-				},
-				{
-					name: "HTML",
-					extensions: ["html"]
-				},
-				{
-					name: "JSON",
-					extensions: ["json"]
-				},
-				{
-					name: "JavaScript",
-					extensions: ["js"]
-				},
-				{
-					name: "TypeScript",
-					extensions: ["ts"]
-				}
-			]
+			filters: pickerFilters
 		})
 
 		return selected as string
@@ -168,6 +120,53 @@ export function onClose(editor: monaco.editor.IStandaloneCodeEditor, store: Stor
 export function getExtension(fname: string) {
 	return fname.slice((Math.max(0, fname.lastIndexOf(".")) || Infinity) + 1);
 }
+
+export const pickerFilters = [
+	{
+		name: "Markdown",
+		extensions: ["md"]
+	},
+	{
+		name: "Text",
+		extensions: ["txt"]
+	},
+	{
+		name: "Shell Script",
+		extensions: ["sh"]
+	},
+	{
+		name: "C",
+		extensions: ["c"]
+	},
+	{
+		name: "C++",
+		extensions: ["cpp"]
+	},
+	{
+		name: "Python",
+		extensions: ["py"]
+	},
+	{
+		name: "CSS",
+		extensions: ["css"]
+	},
+	{
+		name: "HTML",
+		extensions: ["html"]
+	},
+	{
+		name: "JSON",
+		extensions: ["json"]
+	},
+	{
+		name: "JavaScript",
+		extensions: ["js"]
+	},
+	{
+		name: "TypeScript",
+		extensions: ["ts"]
+	}
+]
 
 export const fileTypes = new Map<string, string>([
 	["txt", "plaintext"],
