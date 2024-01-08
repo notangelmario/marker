@@ -1,8 +1,3 @@
-@font-face {
-	font-family: 'Fira Code', monospace;
-	src: url("/FiraCode-Regular.ttf");
-}
-
 :root {
 	--dark: #1e1e1e;
 	--light: #fffffe;
@@ -14,6 +9,7 @@ html, body, #app {
 	width: 100%;
 	height: 100%;
 	background-color: var(--light);
+	font-family: 'Courier New', Courier, monospace;
 }
 
 #app {
